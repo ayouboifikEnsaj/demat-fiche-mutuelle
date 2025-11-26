@@ -1,0 +1,236 @@
+/* src/app/components/prise-en-charge-detail/prise-en-charge-detail.component.css */
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #ff7900 !important;
+}
+
+.btn-primary {
+  background-color: #ff7900;
+  border-color: #ff7900;
+}
+
+.btn-primary:hover {
+  background-color: #e66c00;
+  border-color: #e66c00;
+}
+
+.btn-outline-primary {
+  color: #ff7900;
+  border-color: #ff7900;
+}
+
+.btn-outline-primary:hover {
+  background-color: #ff7900;
+  color: white;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.pdf-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(33, 37, 41, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.pdf-container {
+  width: 55%;
+  background-color: #fff;
+}
+/* Variables Orange Business */
+:root {
+  --orange-primary: #ff7900;
+  --orange-dark: #f16e00;
+  --dark-grey: #595959;
+  --light-grey: #f5f5f5;
+}
+
+/* Redéfinition des couleurs Bootstrap */
+.bg-primary {
+  background-color: var(--orange-primary) !important;
+}
+
+.text-primary {
+  color: var(--orange-primary) !important;
+}
+
+.btn-primary {
+  background-color: var(--orange-primary);
+  border-color: var(--orange-primary);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--orange-dark);
+  border-color: var(--orange-dark);
+}
+
+.btn-outline-primary {
+  color: var(--orange-primary);
+  border-color: var(--orange-primary);
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus {
+  background-color: var(--orange-primary);
+  color: white;
+}
+
+/* Styles pour la modal PDF */
+.pdf-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdf-container {
+  width: 90%;
+  max-width: 1000px;
+  max-height: 90vh;
+}
+
+/* Styles généraux */
+.bg-light {
+  background-color: var(--light-grey) !important;
+}
+
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+/* Style pour les inputs désactivés */
+.form-control:disabled {
+  background-color: white;
+  opacity: 1;
+  color: var(--dark-grey);
+}
+/* Couleurs Orange Business */
+:root {
+  --orange-primary: #ff7900;
+  --orange-dark: #f16e00;
+  --dark-grey: #595959;
+  --light-grey: #f8f9fa;
+}
+
+/* Redéfinition des classes Bootstrap */
+.bg-primary {
+  background-color: var(--orange-primary) !important;
+}
+
+.text-primary {
+  color: var(--orange-primary) !important;
+}
+
+.btn-primary {
+  background-color: var(--orange-primary);
+  border-color: var(--orange-primary);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--orange-dark);
+  border-color: var(--orange-dark);
+}
+
+.btn-outline-primary {
+  color: var(--orange-primary);
+  border-color: var(--orange-primary);
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus {
+  background-color: var(--orange-primary);
+  color: white;
+}
+
+.badge.bg-primary {
+  background-color: var(--orange-primary) !important;
+}
+
+/* Style pour la modal PDF */
+.pdf-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdf-container {
+  width: 90%;
+  max-width: 1000px;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+/* Style pour les inputs désactivés */
+.form-control:disabled {
+  background-color: white;
+  opacity: 1;
+  color: var(--dark-grey);
+}
+
+/* Style pour les tableaux */
+.table-light {
+  background-color: var(--light-grey);
+}
+/* 🎨 Palette officielle Orange (Boosted / Orange Brand) */
+
+/* Couleur principale */
+.text-orange {
+  color: #ff7900 !important;
+}
+
+/* Fond orange avec texte blanc */
+.bg-orange {
+  background-color: #ff7900 !important;
+  color: #fff !important;
+}
+
+/* Bouton orange plein */
+.btn-orange {
+  background-color: #ff7900 !important;
+  border-color: #ff7900 !important;
+  color: #fff !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-orange:hover,
+.btn-orange:focus {
+  background-color: #e56f00 !important; /* nuance légèrement plus foncée au survol */
+  border-color: #e56f00 !important;
+  color: #fff !important;
+}
+
+/* Bouton orange en contour */
+.btn-outline-orange {
+  border: 2px solid #ff7900 !important;
+  color: #ff7900 !important;
+  background-color: transparent !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-orange:hover,
+.btn-outline-orange:focus {
+  background-color: #ff7900 !important;
+  color: #fff !important;
+}

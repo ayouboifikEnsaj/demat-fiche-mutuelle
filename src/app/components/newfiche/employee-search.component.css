@@ -1,0 +1,64 @@
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #000;
+}
+
+.dropdown-item {
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.table th {
+  background-color: #212529;
+  color: white;
+}
+
+.btn-primary {
+  background-color: #ff7900;
+  border-color: #ff7900;
+}
+
+.btn-primary:hover {
+  background-color: #e66c00;
+  border-color: #e66c00;
+}
+
+.btn-outline-primary {
+  color: #ff7900;
+  border-color: #ff7900;
+}
+
+.btn-outline-primary:hover {
+  background-color: #ff7900;
+  color: white;
+}
+
+.badge.bg-secondary {
+  background-color: #666 !important;
+}
+
+.badge.bg-primary {
+  background-color: #ff7900 !important;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.alert-info {
+  background-color: #e6f7ff;
+  border-color: #b3e0ff;
+  color: #0066cc;
+}
+
+.alert-danger {
+  background-color: #ffe6e6;
+  border-color: #ffb3b3;
+  color: #cc0000;
+}

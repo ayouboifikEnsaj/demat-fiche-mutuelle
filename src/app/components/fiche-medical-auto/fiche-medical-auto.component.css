@@ -1,0 +1,101 @@
+.amount-input {
+  max-width: 100px;
+}
+
+.btn-circle {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 20px;
+  line-height: 28px;
+  text-align: center;
+}
+
+.consultation-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: space-between;
+}
+
+.consultation-section {
+  width: 48%;
+  background-color: #f9f9f9;
+  padding: 5px;
+  margin-right: auto;
+  margin-left: auto;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+}
+
+.amount-input {
+  width: 100px;
+}
+
+.currency-label {
+  font-weight: bold;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/*.form-control,*/
+/*.input-group {*/
+/*  min-height: 56px; !* Hauteur constante pour bien aligner *!*/
+/*}*/
+/*.invalid-feedback {*/
+/*  position: absolute;*/
+/*  font-size: 0.75rem;*/
+/*}*/
+/*.form-group-relative {*/
+/*  position: relative;*/
+/*}*/
+.custom-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.custom-modal {
+  background-color: white;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Styles pour la carte d'information de l'employé */
+.card-header.bg-primary {
+  background-color: #ff7900 !important;
+  border-color: #ff7900 !important;
+}
+
+.card.border-primary {
+  border-color: #ff7900 !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.badge.bg-secondary {
+  background-color: #666 !important;
+}
+
+/* Animation d'entrée pour la carte */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.container .card {
+  animation: fadeIn 0.5s ease-out;
+}

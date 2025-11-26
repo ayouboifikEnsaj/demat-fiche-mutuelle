@@ -1,0 +1,338 @@
+<!-- src/app/components/fiche-medical-form-by-cuid/fiche-medical-form-by-cuid.component.html -->
+<app-navbar-gestionnaire></app-navbar-gestionnaire>
+<!-- Informations de l'employé sélectionné -->
+<div class="container mt-3" *ngIf="selectedEmployee">
+  <div class="card border-primary mb-4">
+    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <i class="bi bi-person-badge me-2"></i>
+        <h5 class="mb-0">{{ 'EMPLOYEE.INFO' | translate }}</h5>
+      </div>
+      <button class="btn btn-sm btn-light" (click)="changeEmployee()" title="{{ 'EMPLOYEE.CHANGER' | translate }}">
+        <i class="bi bi-arrow-left-right me-1"></i> {{ 'EMPLOYEE.CHANGER' | translate }}
+      </button>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-2">
+            <strong><i class="bi bi-person me-1"></i> {{ 'EMPLOYEE.NOM' | translate }}:</strong> {{ selectedEmployee.lastName }}
+          </div>
+          <div class="mb-2">
+            <strong><i class="bi bi-person me-1"></i> {{ 'EMPLOYEE.PRENOM' | translate }}:</strong> {{ selectedEmployee.firstName }}
+          </div>
+          <div class="mb-2">
+            <strong><i class="bi bi-hash me-1"></i> {{ 'EMPLOYEE.PIMS_ID' | translate }}:</strong> <span class="badge bg-secondary">{{ selectedEmployee.pims }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-2">
+            <strong><i class="bi bi-key me-1"></i> {{ 'EMPLOYEE.CUID' | translate }}:</strong> {{ selectedEmployee.cuid }}
+          </div>
+          <div class="mb-2">
+            <strong><i class="bi bi-envelope me-1"></i> {{ 'EMPLOYEE.EMAIL' | translate }}:</strong> {{ selectedEmployee.email }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Informations de l'employé sélectionné -->
+<!--<div class="container mt-3" *ngIf="selectedEmployee">-->
+<!--  <div class="card border-primary mb-4">-->
+<!--    <div class="card-header bg-primary text-white d-flex align-items-center">-->
+<!--      <i class="bi bi-person-badge me-2"></i>-->
+<!--      <h5 class="mb-0">Informations du collaborateur</h5>-->
+<!--    </div>-->
+<!--    <div class="card-body">-->
+<!--      <div class="row">-->
+<!--        <div class="col-md-6">-->
+<!--          <div class="mb-2">-->
+<!--            <strong><i class="bi bi-person me-1"></i> Nom:</strong> {{ selectedEmployee.lastName }}-->
+<!--          </div>-->
+<!--          <div class="mb-2">-->
+<!--            <strong><i class="bi bi-person me-1"></i> Prénom:</strong> {{ selectedEmployee.firstName }}-->
+<!--          </div>-->
+<!--          <div class="mb-2">-->
+<!--            <strong><i class="bi bi-hash me-1"></i> PIMS ID:</strong> <span class="badge bg-secondary">{{ selectedEmployee.pims }}</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="col-md-6">-->
+<!--          <div class="mb-2">-->
+<!--            <strong><i class="bi bi-key me-1"></i> CUID:</strong> {{ selectedEmployee.cuid }}-->
+<!--          </div>-->
+<!--          <div class="mb-2">-->
+<!--            <strong><i class="bi bi-envelope me-1"></i> Email:</strong> {{ selectedEmployee.email }}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<div class="d-flex justify-content-center align-items-start gap-4 mt-3 flex-wrap">
+
+  <!-- 🎯 Upload fichier -->
+  <!-- Upload fichier PDF avec bouton conditionnel -->
+  <div class="d-flex justify-content-center align-items-center gap-4 mt-3 flex-wrap">
+    <div class="input-group w-auto">
+      <input type="file" class="form-control" id="inputGroupFile04" (change)="onFileSelected($event)">
+
+      <!-- Si aucun fichier sélectionné, bouton Browse -->
+      <!--    <button *ngIf="!fileURL" class="btn btn-outline-secondary" type="button">-->
+      <!--      {{ 'BOUTON_BROWSE' | translate }}-->
+      <!--    </button>-->
+
+      <!-- Si fichier sélectionné, bouton icône poubelle -->
+      <button *ngIf="fileURL" class="btn btn-outline-danger" type="button" (click)="removeFile()" title="{{ 'BUTTON.REMOVE_FILE' | translate }}">
+        <i class="bi bi-trash"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Aperçu PDF -->
+  <div *ngIf="fileURL" class="mt-3 text-center">
+    <a [href]="fileURL" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary">
+      {{ 'PDF.VIEW' | translate }}
+    </a>
+  </div>
+
+  <!-- 📻 Radios Type de Maladie -->
+  <div class="card p-3 shadow-sm border-primary" style="min-width: 400px; max-width: 600px;">
+    <h6 class="mb-2 text-primary">{{ 'MALADIE.TYPE' | translate }}</h6>
+    <div class="d-flex flex-wrap gap-3">
+      <div class="form-check" *ngFor="let type of maladieTypes">
+        <input class="form-check-input"
+               type="radio"
+               name="typeMaladie"
+               [value]="type.value"
+               [(ngModel)]="selectedMaladieType"
+               [id]="type.value">
+        <label class="form-check-label ms-1" [for]="type.value">
+          {{ 'MALADIE.' + type.value.toUpperCase() | translate }}
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="container mt-4 mb-4">
+  <div class="d-flex align-items-end justify-content-between gap-3 flex-nowrap">
+
+    <!-- Recherche CUID -->
+<!--    <div class="position-relative" style="min-width: 200px; flex: 1;">-->
+<!--      <label class="form-label">{{ 'CUID' | translate }}</label>-->
+<!--      <input type="text"-->
+<!--             class="form-control"-->
+<!--             placeholder="Rechercher un CUID..."-->
+<!--             [(ngModel)]="searchText"-->
+<!--             (input)="onSearchChange()"-->
+<!--             (blur)="onSearchBlur()"-->
+<!--             (keydown)="onSearchKeydown($event)">-->
+
+<!--      &lt;!&ndash; Liste overlay &ndash;&gt;-->
+<!--      <ul class="list-group position-absolute w-100 shadow bg-white"-->
+<!--          style="z-index: 1050; max-height: 200px; overflow-y: auto;"-->
+<!--          *ngIf="showList">-->
+<!--        <li class="list-group-item list-group-item-action"-->
+<!--            *ngFor="let cuid of filteredCuids"-->
+<!--            (mousedown)="selectCuid(cuid)">-->
+<!--          {{ cuid }}-->
+<!--        </li>-->
+<!--      </ul>-->
+<!--    </div>-->
+    <!-- Recherche CUID - Masqué si un employé est sélectionné -->
+    <div class="position-relative" style="min-width: 200px; flex: 1;" *ngIf="!selectedEmployee">
+      <label class="form-label">{{ 'CUID' | translate }}</label>
+      <input type="text"
+             class="form-control"
+             placeholder="Rechercher un CUID..."
+             [(ngModel)]="searchText"
+             (input)="onSearchChange()"
+             (blur)="onSearchBlur()"
+             (keydown)="onSearchKeydown($event)">
+
+      <!-- Liste overlay -->
+      <ul class="list-group position-absolute w-100 shadow bg-white"
+          style="z-index: 1050; max-height: 200px; overflow-y: auto;"
+          *ngIf="showList">
+        <li class="list-group-item list-group-item-action"
+            *ngFor="let cuid of filteredCuids"
+            (mousedown)="selectCuid(cuid)">
+          {{ cuid }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Affichage du CUID en lecture seule si un employé est sélectionné -->
+    <div style="min-width: 200px; flex: 1;" *ngIf="selectedEmployee">
+      <label class="form-label">{{ 'CUID' | translate }}</label>
+      <input type="text" class="form-control bg-light" [value]="selectedEmployee.cuid" readonly>
+    </div>
+
+    <!-- Numéro de dossier -->
+    <div style="flex: 1; min-width: 150px;">
+      <label for="dossier" class="form-label">{{ 'DOSSIER.NUMERO' | translate }}</label>
+      <input type="text" class="form-control" id="dossier" [value]="numDossier" readonly>
+    </div>
+
+    <!-- Patient -->
+    <div class="col-md-2">
+      <label for="patient" class="form-label">{{ 'PATIENT.LABEL' | translate }}</label>
+      <select class="form-select" id="patient" [(ngModel)]="selectedPatient">
+        <option value="Lui_Meme">{{ 'PATIENT.MOI' | translate }}</option>
+        <option value="Conjoint">{{ 'PATIENT.CONJOINT' | translate }}</option>
+        <option value="Enfant">{{ 'PATIENT.ENFANT' | translate }}</option>
+      </select>
+    </div>
+
+    <!-- Date de consultation -->
+    <div style="flex: 1; min-width: 180px;">
+      <label for="dateconsultation" class="form-label">{{ 'CONSULTATION.DATE' | translate }}</label>
+      <input type="date" class="form-control" id="dateconsultation">
+    </div>
+
+    <!-- Lieu de dépôt -->
+    <div style="flex: 1; min-width: 150px;">
+      <label for="lieuDepot" class="form-label">{{ 'LIEU' | translate }}</label>
+      <select class="form-select" id="lieuDepot" [(ngModel)]="lieuDepot">
+        <option value="Casablanca">Casablanca</option>
+        <option value="Rabat">Rabat</option>
+      </select>
+    </div>
+
+    <!-- Montant Global -->
+    <div style="flex: 1; min-width: 200px;">
+      <label class="form-label">{{ 'MONTANT.TOTAL' | translate }}</label>
+      <input type="text" class="form-control fw-bold text-end bg-light" [value]="montantGlobal + ' MAD'" readonly>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Sections dynamiques -->
+<div class="consultation-grid">
+  <div class="consultation-section mb-3" *ngFor="let section of sections">
+    <div class="d-flex align-items-center justify-content-between border-bottom py-2">
+      <div class="d-flex align-items-center gap-2">
+        <span class="text-secondary" style="cursor: pointer; font-size: 1.2rem;"
+              (click)="popupVisible && currentSection === section.id ? closePopup(true) : openPopup(section.id)">
+          <i class="bi" [ngClass]="{
+            'bi-chevron-down': currentSection !== section.id,
+            'bi-chevron-up': currentSection === section.id
+          }"></i>
+        </span>
+        <label class="form-check-label fw-semibold mb-0">
+          {{ section.translationKey| translate }}
+        </label>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="fw-semibold">{{ 'FICHE.ACTIONS.MONTANT' | translate }}</span>
+        <input type="number" class="form-control form-control-sm bg-light text-muted"
+               [value]="section.total" readonly style="width: 100px;">
+        <span class="text-muted">MAD</span>
+      </div>
+    </div>
+
+    <!-- Popup de saisie -->
+    <div *ngIf="popupVisible && currentSection === section.id" class="mt-3 ps-3 border-top pt-3">
+      <div *ngFor="let row of dateAmountRows; let i = index" class="row gy-2 align-items-end mb-2">
+
+        <!-- Type doc (actes uniquement) -->
+        <div *ngIf="section.id === 'actes'" class="col-md-3">
+          <label class="form-label mb-1">{{ 'FICHE.ACTIONS.TYPE_DOCUMENT' | translate }}</label>
+          <div class="d-flex align-items-center gap-2">
+            <input class="form-check-input" type="radio" [name]="'typeDoc_' + i"
+                   [(ngModel)]="row.typeDocument" [value]="'facture'" [id]="'facture_' + i">
+            <label class="form-check-label" [for]="'facture_' + i">{{ 'SECTION.FACTURE' | translate }}</label>
+            <input class="form-check-input" type="radio" [name]="'typeDoc_' + i"
+                   [(ngModel)]="row.typeDocument" [value]="'devis'" [id]="'devis_' + i">
+            <label class="form-check-label" [for]="'devis_' + i">{{ 'SECTION.DEVIS' | translate }}</label>
+          </div>
+        </div>
+
+        <div [class.col-md-5]="section.id !== 'actes'" [class.col-md-4]="section.id === 'actes'">
+          <label class="form-label mb-1">{{ 'SECTION.DATE' | translate }}</label>
+          <input type="date"
+                 class="form-control form-control-sm"
+                 [(ngModel)]="row.date"
+                 [ngClass]="{ 'is-invalid': invalidIndexes.includes(i) && (!row.date || !row.amount) }"
+                 (input)="clearInvalid(i)">
+        </div>
+
+        <div [class.col-md-5]="section.id !== 'actes'" [class.col-md-3]="section.id === 'actes'">
+          <label class="form-label mb-1">{{ 'SECTION.MONTANT' | translate }}</label>
+          <div class="input-group input-group-sm">
+            <input type="number"
+                   class="form-control"
+                   [(ngModel)]="row.amount"
+                   [ngClass]="{ 'is-invalid': invalidIndexes.includes(i) && (!row.date || !row.amount) }"
+                   (input)="updateTotal(); clearInvalid(i)"
+                   placeholder="0" min="0">
+            <span class="input-group-text">MAD</span>
+          </div>
+        </div>
+
+        <div class="col-md-1 d-flex align-items-end justify-content-center">
+          <label class="form-label invisible">Supprimer</label>
+          <button class="btn btn-outline-danger btn-sm"
+                  (click)="removeRow(i)" *ngIf="dateAmountRows.length > 1">-</button>
+        </div>
+      </div>
+
+      <div class="alert alert-danger p-2 d-flex align-items-center gap-2 mb-2"
+           *ngIf="invalidIndexes.length > 0">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <div [innerHTML]="'ALERT.LIGNES_INVALIDES' | translate"></div>
+      </div>
+
+      <button class="btn btn-light btn-sm rounded-circle p-2" title="Ajouter une ligne" (click)="addDateAmountRow()">
+        <i class="bi bi-plus-lg"></i>
+      </button>
+
+      <button
+        *ngIf="shouldShowValidateButton()"
+        class="btn btn-sm btn-primary ms-2"
+        (click)="closePopup(false)">
+        {{'VALIDER' | translate}}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Actions -->
+<div class=" d-flex justify-content-end mt-1 mb-3 me-3">
+  <button type="button" class="btn btn-success me-2" (click)="submitFicheMedicaleByCuid()">
+    {{ 'BUTTON.SUBMIT' | translate }}
+  </button>
+  <button type="button" class="btn btn-danger" (click)="resetForm()">
+    {{ 'BUTTON.RESET' | translate }}
+  </button>
+</div>
+
+<!-- Modal succès -->
+<div *ngIf="showSuccessModal" class="custom-modal-backdrop">
+  <div class="custom-modal">
+    <div class="text-center p-4">
+      <i class="bi bi-check-circle-fill text-success fs-1 mb-3"></i>
+      <h5>{{ 'SUCCESS.MEDICAL' | translate }}</h5>
+      <button class="btn btn-outline-primary mt-3" (click)="closeModal()">{{ 'CLOSE.MODAL' | translate }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal erreur (simple) -->
+<div *ngIf="showErrorModal" class="custom-modal-backdrop">
+  <div class="custom-modal">
+    <div class="text-center p-4">
+      <i class="bi bi-x-circle-fill text-danger fs-1 mb-3"></i>
+      <h5>Erreur lors de la création</h5>
+      <button class="btn btn-outline-secondary mt-3" (click)="closeErrorModal()">{{ 'CLOSE.MODAL' | translate }}</button>
+    </div>
+  </div>
+</div>

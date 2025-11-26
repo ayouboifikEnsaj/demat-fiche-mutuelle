@@ -1,0 +1,46 @@
+/* src/app/components/prise-en-charge-gestionnaire-table/prise-en-charge-gestionnaire-table.component.css */
+.table {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-dark {
+  background-color: #333;
+}
+
+.btn-success {
+  background-color: #32c832;
+  border-color: #32c832;
+}
+
+.btn-success:hover {
+  background-color: #28a428;
+  border-color: #28a428;
+}
+
+.btn-outline-primary {
+  color: #ff7900;
+  border-color: #ff7900;
+}
+
+.btn-outline-primary:hover {
+  background-color: #ff7900;
+  color: white;
+}
+
+.pagination .page-link {
+  color: #ff7900;
+}
+
+.pagination .active .page-link {
+  background-color: #ff7900;
+  border-color: #ff7900;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 0.35em 0.65em;
+}

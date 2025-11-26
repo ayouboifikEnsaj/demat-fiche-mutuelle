@@ -1,0 +1,65 @@
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+  <div class="container-fluid d-flex align-items-center">
+    <!-- Logo Orange -->
+    <a class="navbar-brand d-flex align-items-center" routerLink="/gestionnaire-home">
+      <img
+        src="https://boosted.orange.com/docs/5.3/assets/brand/orange-logo.svg"
+        alt="Orange Logo"
+        width="20"
+        height="20"
+        class="me-1"
+      />
+    </a>
+
+    <!-- Burger Menu -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Liens navigation collapsables -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mb-1 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/gestionnaire-home">{{ 'ACCUEIL' | translate }}</a>
+        </li>
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link" routerLink="/gestionnaire-home">{{ 'NAV.FICHES' | translate }}</a>-->
+<!--        </li>-->
+        <!-- Remplacer le dropdown par un lien direct -->
+        <li class="nav-item">
+          <a class="nav-link fw-bold" routerLink="/search-employee">
+            {{ 'NOUVELLE_FICHE' | translate }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/prise-en-charge-gestionnaire">
+            <i class="bi bi-clipboard-check me-1"></i> {{ 'NAV.PRISE_EN_CHARGE' | translate }}
+          </a>
+        </li>
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link" href="#">{{ 'NAV.RECLAMATIONS' | translate }}</a>-->
+<!--        </li>-->
+      </ul>
+    </div>
+
+    <!-- ✅ Bloc utilisateur toujours à droite -->
+    <div class="d-flex align-items-center gap-3 ms-auto">
+      <a *ngIf="user?.role === 'gestionnaire'" class="btn btn-outline-orange btn-sm fw-bold text-white" routerLink="/employes-home">
+        <i class="bi bi-speedometer2 me-1"></i> {{ 'DASHBOARD_Employe' | translate }}
+      </a>
+      <div class="d-flex align-items-center gap-2">
+        <span class="fw-bold text-white">Hello</span>
+        <span class="fw-bold" style="color: orange;">EL Mai Fatima zohra</span>
+        <div class="lang-switcher">
+          <button class="lang-btn" (click)="switchLang('fr')">FR</button>
+          <button class="lang-btn" (click)="switchLang('en')">EN</button>
+        </div>
+      </div>
+      <a class="nav-link text-white" (click)="logout()" title="Déconnexion">
+        <i class="bi bi-box-arrow-right fs-5"></i>
+      </a>
+    </div>
+  </div>
+</nav>

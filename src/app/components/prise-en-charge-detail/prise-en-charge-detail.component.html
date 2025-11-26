@@ -1,0 +1,352 @@
+<!--<app-navbar-employe></app-navbar-employe>-->
+
+<!--<div class="container mt-4" *ngIf="priseEnCharge">-->
+<!--  <div class="row">-->
+<!--    &lt;!&ndash; Partie gauche : Informations principales &ndash;&gt;-->
+<!--    <div class="col-md-4 border-end pe-4">-->
+<!--      &lt;!&ndash; Numéro de dossier &ndash;&gt;-->
+
+<!--      &lt;!&ndash; Statut &ndash;&gt;-->
+<!--      <div class="mb-2">-->
+<!--        <label class="form-label fw-bold">{{ 'FICHE.STATUT' | translate }}</label>-->
+<!--        <input class="form-control" [value]="getStatutTranslationKey(priseEnCharge.statutPriseEnCharge) | translate" disabled />-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Montant &ndash;&gt;-->
+<!--      <div class="mb-2">-->
+<!--        <label class="form-label fw-bold">{{ 'MONTANT' | translate }}</label>-->
+<!--        <input class="form-control" [value]="priseEnCharge.montant + ' MAD'" disabled />-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Date de soumission &ndash;&gt;-->
+<!--      <div class="mb-2">-->
+<!--        <label class="form-label fw-bold">{{ 'SUBMITION.DATE' | translate }}</label>-->
+<!--        <input class="form-control" [value]="priseEnCharge.dateSoumission | date:'dd/MM/yyyy'" disabled />-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Motif &ndash;&gt;-->
+<!--      <div class="mb-2">-->
+<!--        <label class="form-label fw-bold">{{ 'MOTIF' | translate }}</label>-->
+<!--        <textarea class="form-control" rows="3" [value]="priseEnCharge.motif" disabled></textarea>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Document de prise en charge &ndash;&gt;-->
+<!--      <div class="mb-2" *ngIf="priseEnCharge?.dossier">-->
+<!--        <label class="form-label fw-bold">{{ 'FICHE_PRISE_EN_CHARGE' | translate }}</label>-->
+<!--        <div class="d-flex align-items-center gap-2 form-control">-->
+<!--          <button class="btn btn-sm btn-outline-primary" (click)="openPdfViewer(priseEnCharge.dossier?.file || '')">-->
+<!--            {{ 'FICHE.DOCUMENT.VIEW' | translate }}-->
+<!--          </button>-->
+<!--          <a class="btn btn-sm btn-outline-primary"-->
+<!--             [href]="'http://localhost:8080/api/attachment/download/' + (priseEnCharge.dossier?.file || '')"-->
+<!--             download>-->
+<!--            {{ 'FICHE.DOCUMENT.DOWNLOAD' | translate }}-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Pli confidentiel &ndash;&gt;-->
+<!--      <div class="mb-2" *ngIf="priseEnCharge?.pliConfidentiel">-->
+<!--        <label class="form-label fw-bold">{{ 'PLI_CONFIDENTIEL' | translate }}</label>-->
+<!--        <div class="d-flex align-items-center gap-2 form-control">-->
+<!--          <button class="btn btn-sm btn-outline-primary" (click)="openPdfViewer(priseEnCharge.pliConfidentiel?.file || '')">-->
+<!--            {{ 'FICHE.DOCUMENT.VIEW' | translate }}-->
+<!--          </button>-->
+<!--          <a class="btn btn-sm btn-outline-primary"-->
+<!--             [href]="'http://localhost:8080/api/attachment/download/' + (priseEnCharge.pliConfidentiel?.file || '')"-->
+<!--             download>-->
+<!--            {{ 'FICHE.DOCUMENT.DOWNLOAD' | translate }}-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Document complémentaire &ndash;&gt;-->
+<!--      <div class="mb-2" *ngIf="priseEnCharge?.complement?.file">-->
+<!--        <label class="form-label fw-bold">{{ 'FICHIER_COMPLEMENT' | translate }}</label>-->
+<!--        <div class="d-flex align-items-center gap-2 form-control">-->
+<!--          <button class="btn btn-sm btn-outline-primary" (click)="openPdfViewer(priseEnCharge.complement?.file || '')">-->
+<!--            {{ 'FICHE.DOCUMENT.VIEW' | translate }}-->
+<!--          </button>-->
+<!--          <a class="btn btn-sm btn-outline-primary"-->
+<!--             [href]="'http://localhost:8080/api/attachment/download/' + (priseEnCharge.complement?.file || '')"-->
+<!--             download>-->
+<!--            {{ 'FICHE.DOCUMENT.DOWNLOAD' | translate }}-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Document d'accord &ndash;&gt;-->
+<!--      <div class="mb-2" *ngIf="priseEnCharge?.accord?.file">-->
+<!--        <label class="form-label fw-bold">{{ 'DOCUMENT_ACCORD' | translate }}</label>-->
+<!--        <div class="d-flex align-items-center gap-2 form-control">-->
+<!--          <button class="btn btn-sm btn-outline-primary" (click)="openPdfViewer(priseEnCharge.accord?.file || '')">-->
+<!--            {{ 'FICHE.DOCUMENT.VIEW' | translate }}-->
+<!--          </button>-->
+<!--          <a class="btn btn-sm btn-outline-primary"-->
+<!--             [href]="'http://localhost:8080/api/attachment/download/' + (priseEnCharge.accord?.file || '')"-->
+<!--             download>-->
+<!--            {{ 'FICHE.DOCUMENT.DOWNLOAD' | translate }}-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Partie droite : Détails et actions &ndash;&gt;-->
+<!--    <div class="col-md-8 ps-4">-->
+<!--      <div class="d-flex justify-content-between align-items-center mb-3">-->
+<!--        <h4 class="mb-0">{{ 'DETAIL_PRISE_EN_CHARGE' | translate }}</h4>-->
+<!--        <button class="btn btn-outline-secondary" (click)="retourListe()">-->
+<!--          <i class="bi bi-arrow-left me-1"></i> {{ 'RETOUR_LISTE' | translate }}-->
+<!--        </button>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Informations détaillées &ndash;&gt;-->
+<!--      <div class="card mb-4">-->
+<!--        <div class="card-header bg-light">-->
+<!--          <h5 class="mb-0">{{ 'INFORMATIONS_DETAILLEES' | translate }}</h5>-->
+<!--        </div>-->
+<!--        <div class="card-body">-->
+<!--          &lt;!&ndash; Ici vous pouvez ajouter des informations supplémentaires si nécessaire &ndash;&gt;-->
+<!--          <p class="text-muted mb-0">{{ 'INFORMATIONS_COMPLEMENTAIRES' | translate }}</p>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Tableau récapitulatif (si vous avez des données à afficher) &ndash;&gt;-->
+<!--      <div class="card mb-4">-->
+<!--        <div class="card-header bg-light">-->
+<!--          <h5 class="mb-0">{{ 'RECAPITULATIF' | translate }}</h5>-->
+<!--        </div>-->
+<!--        <div class="card-body p-0">-->
+<!--          <table class="table table-sm mb-0">-->
+<!--            <thead class="table-light">-->
+<!--            <tr>-->
+<!--              <th>{{ 'DESCRIPTION' | translate }}</th>-->
+<!--              <th>{{ 'MONTANT' | translate }}</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr>-->
+<!--              <td>{{ 'MONTANT_PRISE_EN_CHARGE' | translate }}</td>-->
+<!--              <td>{{ priseEnCharge.montant }} MAD</td>-->
+<!--            </tr>-->
+<!--            &lt;!&ndash; Ajoutez d'autres lignes si nécessaire &ndash;&gt;-->
+<!--            </tbody>-->
+<!--          </table>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Total &ndash;&gt;-->
+<!--      <div class="text-end mb-4">-->
+<!--        <h5>-->
+<!--          {{ 'MONTANT_TOTAL' | translate }}-->
+<!--          <span class="badge bg-primary">{{ priseEnCharge.montant }} MAD</span>-->
+<!--        </h5>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Boutons d'action &ndash;&gt;-->
+<!--      <div class="d-flex justify-content-center gap-3 mt-4 pt-3 border-top">-->
+<!--        &lt;!&ndash; Bouton Modifier (si en attente) &ndash;&gt;-->
+<!--        <button-->
+<!--          *ngIf="priseEnCharge.statutPriseEnCharge === 'En_attente'"-->
+<!--          class="btn btn-primary"-->
+<!--          [routerLink]="['/prise-en-charge', priseEnCharge.id, 'edit']">-->
+<!--          <i class="bi bi-pencil me-1"></i> {{ 'MODIFIER' | translate }}-->
+<!--        </button>-->
+
+<!--        &lt;!&ndash; Bouton pour charger un complément (si retour complément) &ndash;&gt;-->
+<!--        <button-->
+<!--          *ngIf="priseEnCharge.statutPriseEnCharge === 'Retour_complement_d\'informations'"-->
+<!--          class="btn btn-warning"-->
+<!--          [routerLink]="['/prise-en-charge']"-->
+<!--          [queryParams]="{action: 'complement', id: priseEnCharge.id}">-->
+<!--          <i class="bi bi-upload me-1"></i> {{ 'CHARGER_COMPLEMENT' | translate }}-->
+<!--        </button>-->
+
+<!--        &lt;!&ndash; Bouton pour télécharger l'accord (si accordé) &ndash;&gt;-->
+<!--        <a-->
+<!--          *ngIf="priseEnCharge.statutPriseEnCharge === 'accorder' && priseEnCharge.accord?.file"-->
+<!--          class="btn btn-success"-->
+<!--          [href]="'http://localhost:8080/api/attachment/download/' + (priseEnCharge.accord?.file || '')"-->
+<!--          download>-->
+<!--          <i class="bi bi-download me-1"></i> {{ 'TELECHARGER_ACCORD' | translate }}-->
+<!--        </a>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Modal PDF &ndash;&gt;-->
+<!--  <div *ngIf="showPdfViewer" class="pdf-modal">-->
+<!--    <div class="pdf-container p-3 bg-white border rounded">-->
+<!--      <div class="d-flex justify-content-between align-items-center mb-2">-->
+<!--        <h5 class="mb-0">{{ 'FICHE.DOCUMENT.TITLE' | translate }}</h5>-->
+<!--        <button class="btn btn-sm btn-danger" (click)="closePdfViewer()">-->
+<!--          {{ 'FICHE.DOCUMENT.CLOSE' | translate }}-->
+<!--        </button>-->
+<!--      </div>-->
+<!--      <pdf-viewer-->
+<!--        [src]="pdfUrl"-->
+<!--        [render-text]="true"-->
+<!--        [original-size]="false"-->
+<!--        [show-all]="true"-->
+<!--        style="width: 100%; height: 80vh;">-->
+<!--      </pdf-viewer>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="container mt-4" *ngIf="!priseEnCharge">-->
+<!--  <div class="alert alert-info text-center">-->
+<!--    <i class="bi bi-info-circle me-2"></i> {{ 'CHARGEMENT_DONNEES' | translate }}-->
+<!--  </div>-->
+<!--</div>-->
+<app-navbar-employe></app-navbar-employe>
+
+<div class="container py-4" *ngIf="priseEnCharge">
+
+  <!-- 🧾 En-tête -->
+  <div class="text-center mb-5">
+    <h3 class="fw-bold text-orange mb-1">
+      <i class="bi bi-info-circle me-2"></i>
+      {{ 'DETAIL_PRISE_EN_CHARGE' | translate }}
+    </h3>
+    <p class="text-muted">{{ 'CONSULTEZ_LES_DETAILS_COMPLETS_DE_VOTRE_PRISE_EN_CHARGE' | translate }}</p>
+  </div>
+
+  <!-- 🪶 Carte principale -->
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
+
+      <div class="row g-5">
+        <!-- 🧩 Informations principales -->
+        <div class="col-md-4">
+          <h5 class="fw-semibold text-dark mb-3">
+            <i class="bi bi-person-lines-fill me-2"></i>
+            {{ 'INFORMATIONS_GENERALES' | translate }}
+          </h5>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-dark">{{ 'FICHE.STATUT' | translate }}</label>
+            <input type="text" class="form-control form-control-sm rounded-3"
+                   [value]="getStatutTranslationKey(priseEnCharge.statutPriseEnCharge) | translate" disabled />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-dark">{{ 'MONTANT' | translate }}</label>
+            <div class="input-group input-group-sm">
+              <input class="form-control rounded-start-3" [value]="priseEnCharge.montant" disabled />
+              <span class="input-group-text bg-light rounded-end-3">MAD</span>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-dark">{{ 'SUBMITION.DATE' | translate }}</label>
+            <input class="form-control form-control-sm rounded-3"
+                   [value]="priseEnCharge.dateSoumission | date:'dd/MM/yyyy'" disabled />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-dark">{{ 'MOTIF' | translate }}</label>
+            <textarea class="form-control rounded-3" rows="3" [value]="priseEnCharge.motif" disabled></textarea>
+          </div>
+        </div>
+
+        <!-- 📁 Documents -->
+        <div class="col-md-8">
+          <h5 class="fw-semibold text-dark mb-3">
+            <i class="bi bi-file-earmark-text me-2"></i>
+            {{ 'DOCUMENTS_ASSOCIES' | translate }}
+          </h5>
+
+          <div class="row g-3">
+            <!-- Document de prise en charge -->
+            <div class="col-md-6" *ngIf="priseEnCharge?.dossier">
+              <div class="p-3 border rounded-3 bg-light">
+                <h6 class="fw-semibold text-dark mb-2">{{ 'FICHE_PRISE_EN_CHARGE' | translate }}</h6>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-outline-orange btn-sm rounded-pill"
+                          (click)="openPdfViewer(priseEnCharge.dossier?.file || '')">
+                    <i class="bi bi-eye me-1"></i> {{ 'FICHE.DOCUMENT.VIEW' | translate }}
+                  </button>
+                  <a class="btn btn-outline-success btn-sm rounded-pill"
+                     [href]="'http://localhost:8080/api/attachment/download/' + (priseEnCharge.dossier?.file || '')"
+                     download>
+                    <i class="bi bi-download me-1"></i> {{ 'FICHE.DOCUMENT.DOWNLOAD' | translate }}
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Autres documents -->
+            <div class="col-md-6" *ngFor="let doc of ['pliConfidentiel','complement','accord','documentComplementaire']">
+              <div *ngIf="priseEnCharge?.[doc]?.file" class="p-3 border rounded-3 bg-light">
+                <h6 class="fw-semibold text-dark mb-2">
+                  {{ (doc === 'documentComplementaire' ? 'DOCUMENT_COMPLEMENTAIRE' : doc.toUpperCase()) | translate }}
+                </h6>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-outline-orange btn-sm rounded-pill"
+                          (click)="openPdfViewer(priseEnCharge[doc]?.file || '')">
+                    <i class="bi bi-eye me-1"></i> {{ 'FICHE.DOCUMENT.VIEW' | translate }}
+                  </button>
+                  <a class="btn btn-outline-success btn-sm rounded-pill"
+                     [href]="'http://localhost:8080/api/attachment/download/' + (priseEnCharge[doc]?.file || '')"
+                     download>
+                    <i class="bi bi-download me-1"></i> {{ 'FICHE.DOCUMENT.DOWNLOAD' | translate }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        <button *ngIf="priseEnCharge.statutPriseEnCharge === 'En_attente'"
+                class="btn btn-orange rounded-pill px-4"
+                [routerLink]="['/prise-en-charge', priseEnCharge.id, 'edit']">
+          <i class="bi bi-pencil me-1"></i> {{ 'MODIFIER' | translate }}
+        </button>
+
+        <button *ngIf="priseEnCharge.statutPriseEnCharge === 'Retour_complement_d\'informations'"
+                class="btn btn-warning rounded-pill px-4"
+                [routerLink]="['/prise-en-charge']"
+                [queryParams]="{action: 'complement', id: priseEnCharge.id}">
+          <i class="bi bi-upload me-1"></i> {{ 'CHARGER_COMPLEMENT' | translate }}
+        </button>
+
+<!--        <a *ngIf="priseEnCharge.statutPriseEnCharge === 'accorder' && priseEnCharge.accord?.file"-->
+<!--           class="btn btn-success rounded-pill px-4"-->
+<!--           [href]="'http://localhost:8080/api/attachment/download/' + (priseEnCharge.accord?.file || '')"-->
+<!--           download>-->
+<!--          <i class="bi bi-download me-1"></i> {{ 'TELECHARGER_ACCORD' | translate }}-->
+<!--        </a>-->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 📄 Modal PDF -->
+  <div *ngIf="showPdfViewer" class="pdf-modal">
+    <div class="pdf-container p-3 bg-white border rounded-4 shadow">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0 fw-semibold text-orange">{{ 'FICHE.DOCUMENT.TITLE' | translate }}</h5>
+        <button class="btn btn-sm btn-danger rounded-pill" (click)="closePdfViewer()">
+          <i class="bi bi-x-circle me-1"></i> {{ 'FICHE.DOCUMENT.CLOSE' | translate }}
+        </button>
+      </div>
+      <pdf-viewer
+        [src]="pdfUrl"
+        [render-text]="true"
+        [original-size]="false"
+        [show-all]="true"
+        style="width: 100%; height: 80vh;">
+      </pdf-viewer>
+    </div>
+  </div>
+
+</div>
+
+<!-- 🔄 Chargement -->
+<div class="container py-5 text-center" *ngIf="!priseEnCharge">
+  <div class="alert alert-info rounded-3">
+    <i class="bi bi-hourglass-split me-2"></i> {{ 'CHARGEMENT_DONNEES' | translate }}
+  </div>
+</div>

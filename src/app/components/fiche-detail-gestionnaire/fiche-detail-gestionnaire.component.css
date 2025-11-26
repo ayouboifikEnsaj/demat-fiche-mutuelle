@@ -1,0 +1,47 @@
+.card {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #fff;
+}
+
+.list-group-item {
+  background-color: #f8f9fa;
+}
+.custom-table-outer-border thead th,
+.custom-table-outer-border tbody td {
+  border: none;
+}
+
+.custom-table-outer-border thead {
+  background-color: #fff4e6; /* Fond orange clair */
+}
+
+.custom-table-outer-border th {
+  color: #f37c20;
+  font-weight: bold;
+}
+
+.tab {
+  background-color: black;
+}
+
+.pdf-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(33, 37, 41, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.pdf-container {
+  width: 55%;
+  background-color: #fff;
+}
+
+
+

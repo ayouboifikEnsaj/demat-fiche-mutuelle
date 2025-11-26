@@ -1,0 +1,31 @@
+.lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 2px 4px;
+  gap: 6px;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: default;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.lang-btn:hover {
+  background-color: #ff7900;
+  color: white;
+}
+.btn-outline-orange:hover {
+  background-color: #ff7900 !important;
+  color: #fff !important;
+}

@@ -1,0 +1,428 @@
+<!-- src/app/components/prise-en-charge-form/prise-en-charge-form.component.html -->
+<app-navbar-employe></app-navbar-employe>
+
+<div class="container py-4">
+
+  <!-- 🧾 En-tête -->
+  <div class="text-center mb-4">
+    <h3 class="fw-bold text-primary mb-1">
+      <i class="bi bi-clipboard-check me-2"></i>
+      {{ isEditMode ? ('MODIFIER_PRISE_EN_CHARGE' | translate) : ('NOUVELLE_PRISE_EN_CHARGE' | translate) }}
+    </h3>
+    <p class="text-muted">{{ 'FORM.DESCRIPTION' | translate }}</p>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
+
+      <!-- 🔽 Bouton Télécharger le modèle -->
+      <div class="d-flex justify-content-end mb-4">
+        <!-- Suite du fichier src/app/components/prise-en-charge-form/prise-en-charge-form.component.html -->
+        <button class="btn btn-outline-primary rounded-pill px-4"
+                (click)="telechargerModeleFiche()">
+          <i class="bi bi-download me-2"></i>
+          {{ 'TELECHARGER_MODELE' | translate }}
+        </button>
+      </div>
+
+      <!-- 🔥 Message d'erreur -->
+      <div *ngIf="errorMessage" class="alert alert-danger rounded-3 py-2">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="priseEnChargeForm" (ngSubmit)="onSubmit()">
+        <div class="row g-4">
+
+          <!-- ✏️ Motif -->
+          <div class="col-12">
+            <label for="motif" class="form-label fw-semibold text-secondary">
+              {{ 'MOTIF' | translate }} *
+            </label>
+            <textarea id="motif"
+                      formControlName="motif"
+                      class="form-control rounded-3"
+                      rows="3"
+                      placeholder="{{ 'MOTIF_PLACEHOLDER' | translate }}"
+                      [ngClass]="{'is-invalid': priseEnChargeForm.get('motif')?.invalid && priseEnChargeForm.get('motif')?.touched}">
+            </textarea>
+            <div *ngIf="priseEnChargeForm.get('motif')?.invalid && priseEnChargeForm.get('motif')?.touched"
+                 class="invalid-feedback small">
+              <div *ngIf="priseEnChargeForm.get('motif')?.errors?.['required']">
+                {{ 'MOTIF_REQUIS' | translate }}
+              </div>
+              <div *ngIf="priseEnChargeForm.get('motif')?.errors?.['minlength']">
+                {{ 'MOTIF_TROP_COURT' | translate }}
+              </div>
+            </div>
+          </div>
+
+          <!-- 💰 Montant -->
+          <div class="col-md-6">
+            <label for="montant" class="form-label fw-semibold text-secondary">
+              {{ 'MONTANT' | translate }} (MAD) *
+            </label>
+            <div class="input-group">
+              <input type="number"
+                     id="montant"
+                     formControlName="montant"
+                     min="0"
+                     class="form-control rounded-start-3"
+                     placeholder="0"
+                     [ngClass]="{'is-invalid': priseEnChargeForm.get('montant')?.invalid && priseEnChargeForm.get('montant')?.touched}">
+              <span class="input-group-text bg-light rounded-end-3">MAD</span>
+            </div>
+            <div *ngIf="priseEnChargeForm.get('montant')?.invalid && priseEnChargeForm.get('montant')?.touched"
+                 class="invalid-feedback small">
+              <div *ngIf="priseEnChargeForm.get('montant')?.errors?.['required']">
+                {{ 'MONTANT_REQUIS' | translate }}
+              </div>
+              <div *ngIf="priseEnChargeForm.get('montant')?.errors?.['min']">
+                {{ 'MONTANT_POSITIF' | translate }}
+              </div>
+            </div>
+          </div>
+          <!-- src/app/components/prise-en-charge-form/prise-en-charge-form.component.html -->
+
+          <!-- Ajouter cette section après le champ Montant et avant les champs de fichiers -->
+          <div class="col-12 mb-4">
+            <label class="form-label fw-semibold text-secondary">
+              {{ 'TYPE_INTERVENTION' | translate }} *
+            </label>
+            <div class="d-flex gap-4 mt-2">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="typeIntervention" id="typeOperation"
+                       [checked]="typeIntervention === 'operation'"
+                       (change)="onTypeInterventionChange('operation')">
+                <label class="form-check-label" for="typeOperation">
+                  {{ 'OPERATION' | translate }}
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="typeIntervention" id="typeHospitalisation"
+                       [checked]="typeIntervention === 'hospitalisation'"
+                       (change)="onTypeInterventionChange('hospitalisation')">
+                <label class="form-check-label" for="typeHospitalisation">
+                  {{ 'HOSPITALISATION' | translate }}
+                </label>
+              </div>
+            </div>
+            <div *ngIf="!typeIntervention && priseEnChargeForm.get('typeIntervention')?.touched" class="text-danger small mt-1">
+              {{ 'TYPE_INTERVENTION_REQUIS' | translate }}
+            </div>
+          </div>
+
+          <!-- Sous-options pour le type d'opération (visible uniquement si "Opération" est sélectionné) -->
+          <div class="col-12 mb-4" *ngIf="typeIntervention === 'operation'">
+            <label class="form-label fw-semibold text-secondary">
+              {{ 'TYPE_OPERATION' | translate }} *
+            </label>
+            <div class="d-flex gap-4 mt-2">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="typeOperation" id="typePrevue"
+                       [checked]="typeOperation === 'prevue'"
+                       (change)="onTypeOperationChange('prevue')">
+                <label class="form-check-label" for="typePrevue">
+                  {{ 'OPERATION_PREVUE' | translate }}
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="typeOperation" id="typeEffectuee"
+                       [checked]="typeOperation === 'effectuee'"
+                       (change)="onTypeOperationChange('effectuee')">
+                <label class="form-check-label" for="typeEffectuee">
+                  {{ 'OPERATION_EFFECTUEE' | translate }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Date d'opération (visible uniquement si "Opération déjà effectuée" est sélectionné) -->
+          <div class="col-md-6 mb-4" *ngIf="typeIntervention === 'operation' && typeOperation === 'effectuee'">
+            <div class="alert alert-warning">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              {{ 'ALERTE_48H' | translate }}
+            </div>
+
+            <label for="dateOperation" class="form-label fw-semibold text-secondary">
+              {{ 'DATE_OPERATION' | translate }} *
+            </label>
+            <div class="input-group">
+              <input type="date" id="dateOperation" class="form-control"
+                     [(ngModel)]="dateOperation" [ngModelOptions]="{standalone: true}"
+                     [max]="isEditMode ? '' : (today | date:'yyyy-MM-dd')"
+                     [ngClass]="{'is-invalid': !isDateOperationValid}">
+              <button class="btn btn-outline-primary" type="button" (click)="verifierDateOperation()">
+                {{ 'VERIFIER' | translate }}
+              </button>
+            </div>
+            <div *ngIf="!isDateOperationValid" class="text-danger small mt-1">
+              {{ dateOperationErrorMessage }}
+            </div>
+          </div>
+
+          <!-- 📄 Fiche de prise en charge -->
+          <div class="col-md-6">
+            <label for="dossierFile" class="form-label fw-semibold text-secondary">
+              {{ 'FICHE_PRISE_EN_CHARGE' | translate }} (PDF) *
+            </label>
+
+            <!-- Fichier existant (en mode édition) -->
+            <div *ngIf="isEditMode && existingDossierFileCode && !dossierFileChanged" class="mb-2">
+              <div class="d-flex align-items-center p-2 border rounded bg-light">
+                <i class="bi bi-file-earmark-pdf text-danger fs-4 me-2"></i>
+                <span class="flex-grow-1">{{ existingDossierFileName }}</span>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-primary"
+                          data-bs-toggle="modal" data-bs-target="#previewDossierModal">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-success"
+                          (click)="telechargerFichierExistant(existingDossierFileCode, existingDossierFileName || 'dossier.pdf')">
+                    <i class="bi bi-download"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger"
+                          (click)="supprimerDossierExistant()">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="mt-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary"
+                        (click)="dossierFileChanged = true">
+                  <i class="bi bi-arrow-repeat me-1"></i> {{ 'REMPLACER_FICHIER' | translate }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Sélection de fichier (nouveau ou remplacement) -->
+            <div *ngIf="!isEditMode || !existingDossierFileCode || dossierFileChanged">
+              <div class="input-group">
+                <input type="file"
+                       id="dossierFile"
+                       class="form-control rounded-3"
+                       accept="application/pdf"
+                       (change)="onDossierFileSelected($event)">
+                <button *ngIf="dossierFile"
+                        type="button"
+                        class="btn btn-outline-danger"
+                        (click)="dossierFile = null; dossierFileChanged = false;">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+              <small class="text-muted">{{ 'FORMAT_PDF_REQUIS' | translate }}</small>
+            </div>
+
+            <!-- Prévisualisation du nouveau fichier -->
+            <div *ngIf="dossierFile" class="mt-2 d-flex align-items-center gap-2">
+              <i class="bi bi-file-earmark-pdf text-danger fs-4"></i>
+              <span>{{ dossierFile.name }} ({{ (dossierFile.size / 1024).toFixed(2) }} KB)</span>
+              <button type="button" class="btn btn-sm btn-outline-primary rounded-pill"
+                      data-bs-toggle="modal" data-bs-target="#previewDossierModal">
+                <i class="bi bi-eye me-1"></i> {{ 'PREVISUALISER' | translate }}
+              </button>
+            </div>
+          </div>
+
+          <!-- 🔒 Pli confidentiel -->
+          <div class="col-md-6">
+            <label for="pliConfidentielFile" class="form-label fw-semibold text-secondary">
+              {{ 'PLI_CONFIDENTIEL' | translate }} (PDF) *
+            </label>
+
+            <!-- Fichier existant (en mode édition) -->
+            <div *ngIf="isEditMode && existingPliConfidentielFileCode && !pliConfidentielFileChanged" class="mb-2">
+              <div class="d-flex align-items-center p-2 border rounded bg-light">
+                <i class="bi bi-file-earmark-pdf text-danger fs-4 me-2"></i>
+                <span class="flex-grow-1">{{ existingPliConfidentielFileName }}</span>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-primary"
+                          data-bs-toggle="modal" data-bs-target="#previewPliModal">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-success"
+                          (click)="telechargerFichierExistant(existingPliConfidentielFileCode, existingPliConfidentielFileName || 'pli-confidentiel.pdf')">
+                    <i class="bi bi-download"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger"
+                          (click)="supprimerPliConfidentielExistant()">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="mt-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary"
+                        (click)="pliConfidentielFileChanged = true">
+                  <i class="bi bi-arrow-repeat me-1"></i> {{ 'REMPLACER_FICHIER' | translate }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Sélection de fichier (nouveau ou remplacement) -->
+            <div *ngIf="!isEditMode || !existingPliConfidentielFileCode || pliConfidentielFileChanged">
+              <div class="input-group">
+                <input type="file"
+                       id="pliConfidentielFile"
+                       class="form-control rounded-3"
+                       accept="application/pdf"
+                       (change)="onPliConfidentielFileSelected($event)">
+                <button *ngIf="pliConfidentielFile"
+                        type="button"
+                        class="btn btn-outline-danger"
+                        (click)="pliConfidentielFile = null; pliConfidentielFileChanged = false;">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+              <small class="text-muted">{{ 'FORMAT_PDF_REQUIS' | translate }}</small>
+            </div>
+
+            <!-- Prévisualisation du nouveau fichier -->
+            <div *ngIf="pliConfidentielFile" class="mt-2 d-flex align-items-center gap-2">
+              <i class="bi bi-file-earmark-pdf text-danger fs-4"></i>
+              <span>{{ pliConfidentielFile.name }} ({{ (pliConfidentielFile.size / 1024).toFixed(2) }} KB)</span>
+              <button type="button" class="btn btn-sm btn-outline-primary rounded-pill"
+                      data-bs-toggle="modal" data-bs-target="#previewPliModal">
+                <i class="bi bi-eye me-1"></i> {{ 'PREVISUALISER' | translate }}
+              </button>
+            </div>
+          </div>
+          <!-- 📋 Document complémentaire (analyses, etc.) -->
+          <div class="col-md-6">
+            <label for="documentComplementaireFile" class="form-label fw-semibold text-secondary">
+              {{ 'DOCUMENT_COMPLEMENTAIRE' | translate }} (PDF)
+            </label>
+
+            <!-- Fichier existant (en mode édition) -->
+            <div *ngIf="isEditMode && existingDocumentComplementaireFileCode && !documentComplementaireFileChanged" class="mb-2">
+              <div class="d-flex align-items-center p-2 border rounded bg-light">
+                <i class="bi bi-file-earmark-pdf text-danger fs-4 me-2"></i>
+                <span class="flex-grow-1">{{ existingDocumentComplementaireFileName }}</span>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-primary"
+                          data-bs-toggle="modal" data-bs-target="#previewDocumentComplementaireModal">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-success"
+                          (click)="telechargerFichierExistant(existingDocumentComplementaireFileCode, existingDocumentComplementaireFileName || 'document-complementaire.pdf')">
+                    <i class="bi bi-download"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger"
+                          (click)="supprimerDocumentComplementaireExistant()">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="mt-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary"
+                        (click)="documentComplementaireFileChanged = true">
+                  <i class="bi bi-arrow-repeat me-1"></i> {{ 'REMPLACER_FICHIER' | translate }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Sélection de fichier (nouveau ou remplacement) -->
+            <div *ngIf="!isEditMode || !existingDocumentComplementaireFileCode || documentComplementaireFileChanged">
+              <div class="input-group">
+                <input type="file"
+                       id="documentComplementaireFile"
+                       class="form-control rounded-3"
+                       accept="application/pdf"
+                       (change)="onDocumentComplementaireFileSelected($event)">
+                <button *ngIf="documentComplementaireFile"
+                        type="button"
+                        class="btn btn-outline-danger"
+                        (click)="documentComplementaireFile = null; documentComplementaireFileChanged = false;">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+              <small class="text-muted">{{ 'FORMAT_PDF_REQUIS' | translate }}</small>
+            </div>
+
+            <!-- Prévisualisation du nouveau fichier -->
+            <div *ngIf="documentComplementaireFile" class="mt-2 d-flex align-items-center gap-2">
+              <i class="bi bi-file-earmark-pdf text-danger fs-4"></i>
+              <span>{{ documentComplementaireFile.name }} ({{ (documentComplementaireFile.size / 1024).toFixed(2) }} KB)</span>
+              <button type="button" class="btn btn-sm btn-outline-primary rounded-pill"
+                      data-bs-toggle="modal" data-bs-target="#previewDocumentComplementaireModal">
+                <i class="bi bi-eye me-1"></i> {{ 'PREVISUALISER' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ✅ Boutons d'action -->
+        <div class="d-flex justify-content-end gap-3 mt-5">
+          <button type="button" class="btn btn-light border" (click)="confirmerAnnulation()">
+            <i class="bi bi-x-circle me-1"></i> {{ 'ANNULER' | translate }}
+          </button>
+          <button type="submit" class="btn btn-primary rounded-pill px-4"
+                  [disabled]="isSubmitting || priseEnChargeForm.invalid">
+            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+            <i class="bi bi-check-circle me-1"></i>
+            {{ isEditMode ? ('METTRE_A_JOUR' | translate) : ('SOUMETTRE' | translate) }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 🔍 Modals de prévisualisation PDF -->
+<div class="modal fade" id="previewDossierModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">{{ 'PREVISUALISATION_FICHE' | translate }}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <iframe *ngIf="previewDossier" [src]="previewDossier"
+                class="w-100 rounded" style="height: 70vh;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal pour prévisualiser le document complémentaire -->
+<div class="modal fade" id="previewDocumentComplementaireModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">{{ 'PREVISUALISATION_COMPLEMENT' | translate }}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <iframe *ngIf="previewDocumentComplementaire" [src]="previewDocumentComplementaire"
+                class="w-100 rounded" style="height: 70vh;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="previewPliModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">{{ 'PREVISUALISATION_PLI' | translate }}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <iframe *ngIf="previewPliConfidentiel" [src]="previewPliConfidentiel"
+                class="w-100 rounded" style="height: 70vh;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🔔 Modal Notification Orange Boosted -->
+<div *ngIf="showNotificationModal" class="custom-modal-backdrop">
+  <div class="custom-modal rounded-4 p-4 text-center bg-white shadow">
+    <i class="bi bi-exclamation-circle-fill text-warning fs-1 mb-3"></i>
+    <h5 class="fw-semibold mb-2">{{ 'NOTIF.REMISE_PRISE_EN_CHARGE' | translate }}</h5>
+    <p class="text-muted">{{ 'NOTIF.REMISE_PRISE_EN_CHARGE_DESC' | translate }}</p>
+    <button class="btn btn-outline-primary mt-3 px-4 rounded-pill" (click)="closeNotification()">
+      {{ 'CLOSE.MODAL' | translate }}
+    </button>
+  </div>
+</div>
+

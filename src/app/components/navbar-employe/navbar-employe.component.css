@@ -1,0 +1,64 @@
+/* Réduire la hauteur de la navbar */
+.navbar {
+  padding-top: 0.25rem;  /* Réduit l'espace au-dessus des éléments de la navbar */
+  padding-bottom: 0.25rem; /* Réduit l'espace en-dessous des éléments */
+}
+
+/* Réduire le padding des éléments de la navbar */
+.navbar-nav .nav-item .nav-link {
+  padding-top: 0.5rem;  /* Ajuste le padding pour réduire l'espace vertical */
+  padding-bottom: 0.5rem; /* Ajuste le padding pour réduire l'espace vertical */
+}
+
+/* Réduire la hauteur de la navbar sans affecter le logo */
+.navbar-brand {
+  padding-top: 0;  /* Aucune marge supplémentaire en haut */
+  padding-bottom: 0; /* Aucune marge supplémentaire en bas */
+}
+
+.navbar-toggler {
+  padding: 0.25rem 0.5rem;  /* Réduit l'espacement dans le bouton */
+}
+#userSidebar{
+  width: 300px;
+}
+.d-flex align-items-center ms-auto{
+
+}
+
+.lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 2px 4px;
+  gap: 6px;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.lang-btn:hover {
+  color: white;
+  background-color: #ff7900;
+  border-radius: 4px;
+}
+.btn-outline-orange:hover {
+  background-color: #ff7900 !important;
+  color: #fff !important;
+}
+
+
+
+
+

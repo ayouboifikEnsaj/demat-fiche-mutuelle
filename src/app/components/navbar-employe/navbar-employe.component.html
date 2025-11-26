@@ -1,0 +1,77 @@
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark px-3" style="height: 85px">
+  <div class="container-fluid d-flex align-items-center justify-content-between">
+
+    <!-- Zone gauche : Logo + liens -->
+    <div class="d-flex align-items-center">
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center me-3" routerLink="/gestionnaire-home">
+        <img src="https://boosted.orange.com/docs/5.3/assets/brand/orange-logo.svg"
+             alt="Orange Logo" width="25" height="25" class="me-2"/>
+      </a>
+
+      <!-- Bouton Burger -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarNav" aria-controls="navbarNav"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Liens -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav d-flex align-items-center gap-2">
+          <li class="nav-item">
+            <a class="nav-link fw-bold" routerLink="/employes-home">{{ 'ACCUEIL' | translate }}</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link fw-bold dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              {{ 'NOUVELLE_FICHE' | translate }}
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" routerLink="/medical-fiche">{{ 'FICHE_MEDICALE'| translate }}</a></li>
+              <li><a class="dropdown-item" routerLink="/dentaire-fiche">{{ 'FICHE_DENTAIRE'| translate }}</a></li>
+              <li><a class="dropdown-item" routerLink="/prise-en-charge/create">{{ 'PRISE_EN_CHARGE'| translate }}</a></li>
+            </ul>
+          </li>
+<!--          <li class="nav-item">-->
+<!--            <a class="nav-link fw-bold" routerLink="/employes-home">{{ 'MES_FICHES'| translate }}</a>-->
+<!--          </li>-->
+          <li class="nav-item">
+            <a class="nav-link fw-bold" routerLink="/prise-en-charge">{{ 'NAV.MES_PRISES_EN_CHARGE'| translate }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Zone droite : Hello + Nom + Logout -->
+    <!-- Zone droite : Hello + Nom + Langue + Logout -->
+    <div class="d-flex align-items-center gap-3 text-white">
+      <a *ngIf="user?.role === 'gestionnaire'" class="btn btn-outline-orange btn-sm fw-bold text-white" routerLink="/gestionnaire-home">
+        <i class="bi bi-speedometer2 me-1"></i> {{ 'DASHBOARD_GESTIONNAIRE' | translate }}
+      </a>
+
+      <!-- Hello + Nom -->
+      <div class="d-flex align-items-center gap-2">
+        <span class="fw-bold">Hello</span>
+        <span class="fw-bold" style="color: orange;">
+      {{ user?.firstName }} {{ user?.lastName }}
+    </span>
+        <div class="lang-switcher">
+          <button class="lang-btn" (click)="switchLang('fr')">FR</button>
+          <button class="lang-btn" (click)="switchLang('en')">EN</button>
+        </div>
+      </div>
+
+
+      <!-- Bouton déconnexion -->
+      <a class="nav-link text-white" (click)="logout()" title="Déconnexion">
+        <i class="bi bi-box-arrow-right fs-5"></i>
+      </a>
+    </div>
+
+
+  </div>
+</nav>
+
+
+
+

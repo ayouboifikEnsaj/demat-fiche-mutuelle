@@ -1,0 +1,131 @@
+<app-navbar-gestionnaire></app-navbar-gestionnaire>
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header bg-dark text-white">
+      <h4>Recherche de collaborateur</h4>
+    </div>
+    <div class="card-body">
+      <!-- Formulaire de recherche -->
+      <form (ngSubmit)="searchEmployees()" #searchForm="ngForm">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="pims" class="form-label">PIMS ID</label>
+              <input type="text" class="form-control" id="pims" name="pims" [(ngModel)]="searchCriteria.pims">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="firstName" class="form-label">Prénom</label>
+              <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="searchCriteria.first_name">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="lastName" class="form-label">Nom</label>
+              <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="searchCriteria.last_name">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="cuid" class="form-label">CUID</label>
+              <input type="text" class="form-control" id="cuid" name="cuid" [(ngModel)]="searchCriteria.cuid">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" [(ngModel)]="searchCriteria.email">
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end mt-3">
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <i class="bi bi-search me-1"></i> Rechercher
+            <span class="spinner-border spinner-border-sm ms-1" *ngIf="loading" role="status" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Message d'erreur -->
+      <div class="alert alert-danger mt-3" *ngIf="errorMessage">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
+      </div>
+
+      <!-- Bouton de réinitialisation -->
+      <div class="d-flex justify-content-between mt-3" *ngIf="searchPerformed">
+        <button type="button" class="btn btn-outline-secondary" (click)="resetSearch()">
+          <i class="bi bi-arrow-counterclockwise me-1"></i> Réinitialiser
+        </button>
+      </div>
+
+      <!-- Résultats de recherche -->
+      <div class="mt-4" *ngIf="employees.length > 0">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">
+            <i class="bi bi-list-ul me-2"></i>
+            Résultats de la recherche
+            <span class="badge bg-primary ms-2">{{ employees.length }}</span>
+          </h5>
+          <div class="small text-muted">
+            {{ employees.length }} résultat(s) trouvé(s)
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead class="table-dark">
+            <tr>
+              <th>PIMS ID</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>CUID</th>
+              <th>Email</th>
+              <th class="text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let employee of employees">
+              <td><span class="badge bg-secondary">{{ employee.pims }}</span></td>
+              <td>{{ employee.last_name }}</td>
+              <td>{{ employee.first_name }}</td>
+              <td>{{ employee.cuid }}</td>
+              <td>{{ employee.email }}</td>
+              <td class="text-center">
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton{{employee.id}}" data-bs-toggle="dropdown" aria-expanded="false">
+                    Initier fiche
+                  </button>
+                  <ul class="dropdown-menu" [attr.aria-labelledby]="'dropdownMenuButton' + employee.id">
+                  <li><a class="dropdown-item" (click)="initiateForm(employee, 'medical')">
+                      <i class="bi bi-file-medical me-2"></i> Fiche médicale
+                    </a></li>
+                    <li><a class="dropdown-item" (click)="initiateForm(employee, 'dentaire')">
+                      <i class="bi bi-file-earmark-medical me-2"></i> Fiche dentaire
+                    </a></li>
+                    <li><a class="dropdown-item" (click)="initiateForm(employee, 'priseEnCharge')">
+                      <i class="bi bi-file-earmark-text me-2"></i> Prise en charge
+                    </a></li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Message si aucun résultat -->
+      <div class="alert alert-info mt-3" *ngIf="searchPerformed && !loading && employees.length === 0 && !errorMessage">
+        <i class="bi bi-info-circle-fill me-2"></i> Aucun résultat trouvé
+      </div>
+
+      <!-- Indicateur de chargement -->
+      <div class="d-flex justify-content-center mt-3" *ngIf="loading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Chargement</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

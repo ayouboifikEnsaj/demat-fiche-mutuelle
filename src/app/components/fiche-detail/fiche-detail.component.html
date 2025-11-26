@@ -1,0 +1,153 @@
+<app-navbar-employe></app-navbar-employe>
+
+<div class="container mt-4" *ngIf="fiche">
+  <div class="row">
+    <!-- Partie gauche : QR code + infos -->
+    <div class="col-md-4 border-end pe-4">
+      <div class="text-center mb-3">
+        <img [src]="qrCodeUrl" alt="QR Code" width="100" height="100"/>
+        <p class="mt-2 fw-bold">{{ fiche.numDossier }}</p>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label fw-bold">{{ 'FICHE.STATUT' | translate }}</label>
+        <input class="form-control" [value]="getStatutTranslationKey(fiche.statutFiche) | translate" disabled />
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label fw-bold">{{ 'FICHE.PATIENT' | translate }}</label>
+        <input
+          class="form-control"
+          [value]="'PATIENT.' + getPatientKey(fiche.typePatient) | translate"
+          disabled
+        />
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label fw-bold">{{ 'FICHE.DATE_CONSULTATION' | translate }}</label>
+        <input
+          class="form-control"
+          [value]="fiche.dateConsultation | date: 'dd/MM/yyyy'"
+          disabled
+        />
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label fw-bold">{{ 'FICHE.DATE_SOUMISSION' | translate }}</label>
+        <input
+          class="form-control"
+          [value]="fiche.dateSoumission | date: 'dd/MM/yyyy'"
+          disabled
+        />
+      </div>
+      <div class="mb-2">
+        <label class="form-label fw-bold">{{ 'LIEU' | translate }}</label>
+        <input
+          class="form-control"
+          [value]="fiche.lieuDepot " disabled
+        />
+      </div>
+
+      <!-- Document justificatif -->
+      <div class="mb-2" *ngIf="fiche?.dossier">
+        <label class="form-label fw-bold">{{ 'FICHE.DOCUMENT' | translate }}</label>
+        <div class="d-flex align-items-center gap-2 form-control">
+          <button
+            class="btn btn-sm btn-outline-success"
+            (click)="openPdfViewer(fiche.dossier.file)"
+          >
+            {{ 'FICHE.DOCUMENT.VIEW' | translate }}
+          </button>
+          <a
+            class="btn btn-sm btn-outline-primary"
+            [href]="'http://localhost:8080/api/attachment/download/' + fiche.dossier.file"
+            download
+          >
+            {{ 'FICHE.DOCUMENT.DOWNLOAD' | translate }}
+          </a>
+        </div>
+      </div>
+
+<!--      A fixer pour afficher le compléments seulement si la fiche été déja retourné en retour de compléments d'informations-->
+      <!-- Document complémentaire (si disponible) -->
+      <div class="mb-2" *ngIf="fiche?.complement">
+        <label class="form-label fw-bold">{{ 'FICHE.DOCUMENT.COMPLEMENTAIRE' | translate }}</label>
+        <div class="d-flex align-items-center gap-2 form-control">
+          <button
+            class="btn btn-sm btn-outline-success"
+            (click)="openPdfViewer(fiche.complement.file)"
+          >
+            {{ 'FICHE.DOCUMENT.VIEW' | translate }}
+          </button>
+          <a
+            class="btn btn-sm btn-outline-primary"
+            [href]="'http://localhost:8080/api/attachment/download/' + fiche.complement.file"
+            download
+          >
+            {{ 'FICHE.DOCUMENT.DOWNLOAD' | translate }}
+          </a>
+        </div>
+      </div>
+
+
+
+      <!-- PDF viewer modal -->
+      <div *ngIf="showPdfViewer && isBrowser" class="pdf-modal">
+        <div
+          class="pdf-container p-3 bg-white border rounded"
+          style="max-height: 90vh; overflow: auto;"
+        >
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0">{{ 'FICHE.DOCUMENT.TITLE' | translate }}</h5>
+            <button class="btn btn-sm btn-danger" (click)="closePdfViewer()">
+              {{ 'FICHE.DOCUMENT.CLOSE' | translate }}
+            </button>
+          </div>
+
+          <pdf-viewer
+            [src]="pdfUrl"
+            [render-text]="true"
+            [original-size]="false"
+            [show-all]="true"
+            style="width: 100%; height: 80vh"
+          ></pdf-viewer>
+        </div>
+      </div>
+    </div>
+
+    <!-- Partie droite : Détails des actions -->
+    <div class="col-md-8 ps-4">
+      <div *ngFor="let action of fiche.actions" class="mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-2">{{ ('TYPE_ACTION.' + action.typeAction) | translate }}</h5>
+          <span class="badge bg-secondary fs-6">{{ action.montantAction }} MAD</span>
+        </div>
+
+        <table class="table table-sm custom-table-outer-border">
+          <thead class="table-light">
+          <tr>
+            <th class="tab">{{ 'FICHE.ACTIONS.DATE' | translate }}</th>
+            <th class="tab">{{ 'FICHE.ACTIONS.MONTANT' | translate }}</th>
+            <th class="tab">{{ 'FICHE.ACTIONS.TYPE_DOCUMENT' | translate }}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let detail of action.detailsActions">
+            <td>{{ detail.dateAction | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ detail.montant }} MAD</td>
+            <td>{{ getDocumentTypeLabel(detail.typeDocument) }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Total global -->
+      <div class="text-end mt-3">
+        <h5>
+          {{ 'FICHE.TOTAL_FRAIS' | translate }}
+          <span class="badge bg-dark">{{ fiche.montantTotal }} MAD</span>
+        </h5>
+      </div>
+    </div>
+  </div>
+</div>

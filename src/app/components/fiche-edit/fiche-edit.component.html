@@ -1,0 +1,571 @@
+<!--<app-navbar-employe></app-navbar-employe>-->
+
+<!--<div class="container my-4 pb-5" *ngIf="ficheData; else loadingTpl">-->
+
+<!--  &lt;!&ndash; En-tête &ndash;&gt;-->
+<!--  <div class="d-flex flex-wrap align-items-end justify-content-between mb-3">-->
+<!--    <div>-->
+<!--      <span class="badge bg-primary">{{ ficheData.statutFiche }}</span>-->
+<!--    </div>-->
+<!--    <ul class="list-unstyled mb-0 text-end small">-->
+<!--      <li><strong>Employé :</strong> {{ ficheData.employee?.firstName }} {{ ficheData.employee?.lastName }}</li>-->
+<!--      <li><strong>Soumise le :</strong> {{ ficheData.dateSoumission | date:'yyyy-MM-dd' }}</li>-->
+<!--    </ul>-->
+<!--  </div>-->
+
+<!--  <div class="row g-3">-->
+<!--    &lt;!&ndash; Dossier + QR + PDF &ndash;&gt;-->
+<!--    <div class="col-12 col-lg-6">-->
+<!--      <div class="card h-100 shadow-sm">-->
+<!--        <div class="card-header">-->
+<!--          <h2 class="h5 mb-0">Numéro de dossier</h2>-->
+<!--        </div>-->
+
+<!--        <div class="card-body text-center">-->
+<!--          <div *ngIf="qrCodeUrl" class="mb-2">-->
+<!--            <img-->
+<!--              [src]="qrCodeUrl"-->
+<!--              alt="QR Code du dossier"-->
+<!--              class="img-fluid border rounded p-2 bg-white"-->
+<!--              style="max-width: 140px;"-->
+<!--            >-->
+<!--          </div>-->
+
+<!--          <div class="fw-semibold fs-5 mb-3">-->
+<!--            {{ ficheData.numDossier }}-->
+<!--          </div>-->
+
+<!--          <div *ngIf="ficheData?.dossier" class="mt-2">-->
+<!--            <label class="form-label fw-bold d-block text-start">Document justificatif :</label>-->
+<!--            <div class="d-flex align-items-center gap-2 border rounded p-2 justify-content-center">-->
+<!--              <button-->
+<!--                type="button"-->
+<!--                class="btn btn-sm btn-primary"-->
+<!--                (click)="openPdfViewer(ficheData.dossier.file)"-->
+<!--              >-->
+<!--                Visualiser-->
+<!--              </button>-->
+
+<!--              <a-->
+<!--                class="btn btn-sm btn-outline-primary"-->
+<!--                [href]="'http://localhost:8080/api/attachment/download/' + ficheData.dossier.file"-->
+<!--                download-->
+<!--              >-->
+<!--                Télécharger-->
+<!--              </a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--        <div *ngIf="showPdfViewer && isBrowser" class="pdf-modal">-->
+<!--          <div class="pdf-container p-3 bg-white border rounded shadow-sm" style="max-height: 90vh; overflow: auto;">-->
+<!--            <div class="d-flex justify-content-between align-items-center mb-2">-->
+<!--              <h5 class="mb-0">Document PDF</h5>-->
+<!--              <button class="btn btn-sm btn-outline-danger" (click)="closePdfViewer()">-->
+<!--                Fermer-->
+<!--              </button>-->
+<!--            </div>-->
+
+<!--            <pdf-viewer-->
+<!--              [src]="pdfUrl"-->
+<!--              [render-text]="true"-->
+<!--              [original-size]="false"-->
+<!--              [show-all]="true"-->
+<!--              style="width: 100%; height: 80vh"-->
+<!--            ></pdf-viewer>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Infos générales &ndash;&gt;-->
+<!--    <div class="col-12 col-lg-6">-->
+<!--      <div class="card h-100 shadow-sm">-->
+<!--        <div class="card-header">-->
+<!--          <h2 class="h5 mb-0">Informations générales</h2>-->
+<!--        </div>-->
+<!--        <div class="card-body">-->
+<!--          <div class="row g-3">-->
+<!--            <div class="col-12">-->
+<!--              <label class="form-label">Date de consultation</label>-->
+<!--              <input type="date" [(ngModel)]="dateConsultation" name="dateConsultation" class="form-control">-->
+<!--            </div>-->
+
+<!--            <div class="col-12 col-md-6">-->
+<!--              <label class="form-label">Type de fiche</label>-->
+<!--              <input-->
+<!--                type="text"-->
+<!--                [(ngModel)]="typeFiche"-->
+<!--                name="typeFiche"-->
+<!--                class="form-control"-->
+<!--                disabled>-->
+<!--            </div>-->
+<!--            <div class="col-12 col-md-6">-->
+<!--              <label class="form-label">Type de patient</label>-->
+<!--              <select class="form-select" [(ngModel)]="typePatient" name="typePatient">-->
+<!--                <option *ngFor="let opt of typePatientOptions" [ngValue]="opt.value">-->
+<!--                  {{ opt.label }}-->
+<!--                </option>-->
+<!--              </select>-->
+<!--            </div>-->
+
+<!--            <div class="row g-3 align-items-end m-0">-->
+<!--              <div class="col-12 col-md-6 p-0 pe-md-2">-->
+<!--                <label class="form-label">Lieu de dépôt</label>-->
+<!--                <select class="form-select" [(ngModel)]="lieuDepot" name="lieuDepot">-->
+<!--                  <option *ngFor="let opt of lieuDepotOptions" [ngValue]="opt.value">-->
+<!--                    {{ opt.label }}-->
+<!--                  </option>-->
+<!--                </select>-->
+<!--              </div>-->
+
+<!--              <div class="col-12 col-md-6 p-0 ps-md-2">-->
+<!--                <label class="form-label">Montant total</label>-->
+<!--                <input type="text" class="form-control" [value]="ficheData.montantTotal" disabled>-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; ⚠️ NOUVEAU : Sections avec possibilité d'ajout &ndash;&gt;-->
+<!--  <div class="card mt-3 shadow-sm">-->
+<!--    <div class="card-header d-flex justify-content-between align-items-center">-->
+<!--      <h2 class="h5 mb-0">Sections de la fiche</h2>-->
+<!--      <button-->
+<!--        class="btn btn-sm btn-success"-->
+<!--        (click)="addNewSection()"-->
+<!--        [disabled]="getAvailableSectionsToAdd().length === 0"-->
+<!--        title="Ajouter une nouvelle section">-->
+<!--        <i class="bi bi-plus-lg"></i> Ajouter section-->
+<!--      </button>-->
+<!--    </div>-->
+<!--    <div class="card-body">-->
+
+<!--      <div *ngIf="sections.length === 0" class="text-center text-muted py-4">-->
+<!--        <i class="bi bi-folder-plus fs-1 mb-2"></i>-->
+<!--        <p>Aucune section disponible. Cliquez sur "Ajouter section" pour commencer.</p>-->
+<!--      </div>-->
+
+<!--      <div class="consultation-grid" *ngIf="sections.length > 0">-->
+<!--        <div class="consultation-section" *ngFor="let section of sections; let i = index" #accItem>-->
+
+<!--          <div class="d-flex align-items-center justify-content-between border-bottom py-2">-->
+<!--            <div class="d-flex align-items-center gap-2">-->
+<!--              <span class="text-secondary" style="cursor: pointer; font-size: 1.2rem;"-->
+<!--                    (click)="popupVisible && currentSectionIndex === i ? closePopup(true) : openPopup(i)">-->
+<!--                <i class="bi" [ngClass]="{-->
+<!--                  'bi-chevron-down': currentSectionIndex !== i,-->
+<!--                  'bi-chevron-up': currentSectionIndex === i-->
+<!--                }"></i>-->
+<!--              </span>-->
+<!--              <label class="form-check-label fw-semibold mb-0">-->
+<!--                {{ formatSectionLabel(section.label) }}-->
+<!--                <span *ngIf="section.isNew" class="badge bg-success ms-2">Nouveau</span>-->
+<!--              </label>-->
+<!--            </div>-->
+<!--            <div class="d-flex align-items-center gap-2">-->
+<!--              <span class="fw-semibold">Montant</span>-->
+<!--              <input type="number" class="form-control form-control-sm bg-light text-muted"-->
+<!--                     [value]="getSectionTotal(i)" readonly style="width: 100px;">-->
+<!--              <span class="text-muted">MAD</span>-->
+<!--              <button class="btn btn-sm btn-outline-danger ms-2"-->
+<!--                      (click)="removeSection(i)"-->
+<!--                      title="Supprimer cette section">-->
+<!--                <i class="bi bi-trash"></i>-->
+<!--              </button>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; ⚠️ NOUVEAU : Popup pour éditer les lignes &ndash;&gt;-->
+<!--          <div *ngIf="popupVisible && currentSectionIndex === i" class="mt-3 ps-3 border-top pt-3">-->
+
+<!--            <div *ngFor="let row of dateAmountRows; let j = index" class="row gy-2 align-items-end mb-2">-->
+
+<!--              <div *ngIf="needsTypeDocument(currentSection)" class="col-md-3">-->
+<!--                <label class="form-label mb-1">Type document</label>-->
+<!--                <div class="d-flex align-items-center gap-2">-->
+<!--                  <input class="form-check-input" type="radio"-->
+<!--                         [name]="'typeDoc_' + j"-->
+<!--                         [(ngModel)]="row.typeDocument"-->
+<!--                         [value]="'Facture'"-->
+<!--                         [id]="'facture_' + j">-->
+<!--                  <label class="form-check-label" [for]="'facture_' + j">Facture</label>-->
+<!--                  <input class="form-check-input" type="radio"-->
+<!--                         [name]="'typeDoc_' + j"-->
+<!--                         [(ngModel)]="row.typeDocument"-->
+<!--                         [value]="'Devis'"-->
+<!--                         [id]="'devis_' + j">-->
+<!--                  <label class="form-check-label" [for]="'devis_' + j">Devis</label>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div [class.col-md-5]="!needsTypeDocument(currentSection)"-->
+<!--                   [class.col-md-4]="needsTypeDocument(currentSection)">-->
+<!--                <label class="form-label mb-1">Date</label>-->
+<!--                <input type="date"-->
+<!--                       class="form-control form-control-sm"-->
+<!--                       [(ngModel)]="row.date"-->
+<!--                       [ngClass]="{ 'is-invalid': invalidIndexes.includes(j) }"-->
+<!--                       (input)="clearInvalid(j)">-->
+<!--              </div>-->
+
+<!--              <div [class.col-md-5]="!needsTypeDocument(currentSection)"-->
+<!--                   [class.col-md-3]="needsTypeDocument(currentSection)">-->
+<!--                <label class="form-label mb-1">Montant</label>-->
+<!--                <div class="input-group input-group-sm">-->
+<!--                  <input type="number"-->
+<!--                         class="form-control"-->
+<!--                         [(ngModel)]="row.amount"-->
+<!--                         [ngClass]="{ 'is-invalid': invalidIndexes.includes(j) }"-->
+<!--                         (input)="clearInvalid(j)"-->
+<!--                         placeholder="0" min="0" step="0.01">-->
+<!--                  <span class="input-group-text">MAD</span>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div class="col-md-1 d-flex align-items-end justify-content-center">-->
+<!--                <label class="form-label invisible">Supprimer</label>-->
+<!--                <button class="btn btn-outline-danger btn-sm"-->
+<!--                        (click)="removeRow(j)"-->
+<!--                        *ngIf="dateAmountRows.length > 1"-->
+<!--                        title="Supprimer cette ligne">-->
+<!--                  <i class="bi bi-dash"></i>-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--            <div class="alert alert-danger p-2 d-flex align-items-center gap-2 mb-2"-->
+<!--                 *ngIf="invalidIndexes.length > 0">-->
+<!--              <i class="bi bi-exclamation-triangle-fill"></i>-->
+<!--              <div>Veuillez remplir correctement toutes les lignes (date ET montant requis).</div>-->
+<!--            </div>-->
+
+<!--            <div class="d-flex gap-2 align-items-center">-->
+<!--              <button class="btn btn-light btn-sm rounded-circle p-2"-->
+<!--                      title="Ajouter une ligne"-->
+<!--                      (click)="addDateAmountRow()">-->
+<!--                <i class="bi bi-plus-lg"></i>-->
+<!--              </button>-->
+
+<!--              <button *ngIf="shouldShowValidateButton()"-->
+<!--                      class="btn btn-sm btn-primary"-->
+<!--                      (click)="closePopup(false)">-->
+<!--                Valider-->
+<!--              </button>-->
+<!--            </div>-->
+
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <div class="fixed-bottom bg-body">-->
+<!--    <div class="container py-2 d-flex justify-content-end gap-2">-->
+<!--      <button type="button" class="btn btn-secondary" (click)="router.navigate(['/employes-home'])">-->
+<!--        Annuler-->
+<!--      </button>-->
+<!--      <button type="button" class="btn btn-primary" (click)="updateFiche()" [disabled]="loading">-->
+<!--        <span *ngIf="!loading">Enregistrer</span>-->
+<!--        <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>-->
+<!--      </button>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--</div>-->
+
+<!--<ng-template #loadingTpl>-->
+<!--  <div class="container py-5 text-center text-body-secondary">-->
+<!--    <div class="spinner-border mb-3" role="status" aria-hidden="true"></div>-->
+<!--    <div>Chargement…</div>-->
+<!--  </div>-->
+<!--</ng-template>-->
+<app-navbar-employe></app-navbar-employe>
+
+<div class="container my-4 pb-5" *ngIf="ficheData; else loadingTpl">
+
+  <!-- En-tête -->
+  <div class="d-flex flex-wrap align-items-end justify-content-between mb-3">
+    <div>
+      <span class="badge bg-primary">{{ ficheData.statutFiche }}</span>
+    </div>
+    <ul class="list-unstyled mb-0 text-end small">
+      <li><strong>Employé :</strong> {{ ficheData.employee?.firstName }} {{ ficheData.employee?.lastName }}</li>
+      <li><strong>Soumise le :</strong> {{ ficheData.dateSoumission | date:'yyyy-MM-dd' }}</li>
+    </ul>
+  </div>
+
+  <div class="row g-3">
+    <!-- Dossier + QR + PDF -->
+    <div class="col-12 col-lg-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header">
+          <h2 class="h5 mb-0">Numéro de dossier</h2>
+        </div>
+
+        <div class="card-body text-center">
+          <div *ngIf="qrCodeUrl" class="mb-2">
+            <img
+              [src]="qrCodeUrl"
+              alt="QR Code du dossier"
+              class="img-fluid border rounded p-2 bg-white"
+              style="max-width: 140px;"
+            >
+          </div>
+
+          <div class="fw-semibold fs-5 mb-3">
+            {{ ficheData.numDossier }}
+          </div>
+
+          <div *ngIf="ficheData?.dossier" class="mt-2">
+            <label class="form-label fw-bold d-block text-start">Document justificatif :</label>
+            <div class="d-flex align-items-center gap-2 border rounded p-2 justify-content-center">
+              <button
+                type="button"
+                class="btn btn-sm btn-primary"
+                (click)="openPdfViewer(ficheData.dossier.file)"
+              >
+                Visualiser
+              </button>
+
+              <a
+                class="btn btn-sm btn-outline-primary"
+                [href]="'http://localhost:8080/api/attachment/download/' + ficheData.dossier.file"
+                download
+              >
+                Télécharger
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="showPdfViewer && isBrowser" class="pdf-modal">
+          <div class="pdf-container p-3 bg-white border rounded shadow-sm" style="max-height: 90vh; overflow: auto;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="mb-0">Document PDF</h5>
+              <button class="btn btn-sm btn-outline-danger" (click)="closePdfViewer()">
+                Fermer
+              </button>
+            </div>
+
+            <pdf-viewer
+              [src]="pdfUrl"
+              [render-text]="true"
+              [original-size]="false"
+              [show-all]="true"
+              style="width: 100%; height: 80vh"
+            ></pdf-viewer>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Infos générales -->
+    <div class="col-12 col-lg-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header">
+          <h2 class="h5 mb-0">Informations générales</h2>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Date de consultation</label>
+              <input type="date" [(ngModel)]="dateConsultation" name="dateConsultation" class="form-control">
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">Type de fiche</label>
+              <input
+                type="text"
+                [(ngModel)]="typeFiche"
+                name="typeFiche"
+                class="form-control"
+                disabled>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label">Type de patient</label>
+              <select class="form-select" [(ngModel)]="typePatient" name="typePatient">
+                <option *ngFor="let opt of typePatientOptions" [ngValue]="opt.value">
+                  {{ opt.label }}
+                </option>
+              </select>
+            </div>
+
+            <div class="row g-3 align-items-end m-0">
+              <div class="col-12 col-md-6 p-0 pe-md-2">
+                <label class="form-label">Lieu de dépôt</label>
+                <select class="form-select" [(ngModel)]="lieuDepot" name="lieuDepot">
+                  <option *ngFor="let opt of lieuDepotOptions" [ngValue]="opt.value">
+                    {{ opt.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-12 col-md-6 p-0 ps-md-2">
+                <label class="form-label">Montant total</label>
+                <input type="text" class="form-control" [value]="ficheData.montantTotal" disabled>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⚠️ MODIFIÉ : Sections sans bouton d'ajout -->
+  <div class="card mt-3 shadow-sm">
+    <div class="card-header">
+      <h2 class="h5 mb-0">Sections de la fiche</h2>
+    </div>
+    <div class="card-body">
+
+      <div class="consultation-grid">
+        <div class="consultation-section" *ngFor="let section of sections; let i = index" #accItem>
+
+          <div class="d-flex align-items-center justify-content-between border-bottom py-2">
+            <div class="d-flex align-items-center gap-2">
+              <span class="text-secondary" style="cursor: pointer; font-size: 1.2rem;"
+                    (click)="popupVisible && currentSectionIndex === i ? closePopup(true) : openPopup(i)">
+                <i class="bi" [ngClass]="{
+                  'bi-chevron-down': currentSectionIndex !== i,
+                  'bi-chevron-up': currentSectionIndex === i
+                }"></i>
+              </span>
+              <label class="form-check-label fw-semibold mb-0">
+                {{ formatSectionLabel(section.label) }}
+                <span *ngIf="section.isNew" class="badge bg-success ms-2">Nouveau</span>
+              </label>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="fw-semibold">Montant</span>
+              <input type="number" class="form-control form-control-sm bg-light text-muted"
+                     [value]="getSectionTotal(i)" disabled  style="width: 100px;">
+              <span class="text-muted">MAD</span>
+            </div>
+          </div>
+
+          <!-- Popup pour éditer les lignes -->
+          <div *ngIf="popupVisible && currentSectionIndex === i" class="mt-3 ps-3 border-top pt-3">
+
+            <div *ngFor="let row of dateAmountRows; let j = index" class="row gy-2 align-items-end mb-2">
+
+              <div *ngIf="needsTypeDocument(currentSection)" class="col-md-3">
+                <label class="form-label mb-1">Type document</label>
+                <div class="d-flex align-items-center gap-2">
+                  <input class="form-check-input" type="radio"
+                         [name]="'typeDoc_' + j"
+                         [(ngModel)]="row.typeDocument"
+                         [value]="'Facture'"
+                         [id]="'facture_' + j">
+                  <label class="form-check-label" [for]="'facture_' + j">Facture</label>
+                  <input class="form-check-input" type="radio"
+                         [name]="'typeDoc_' + j"
+                         [(ngModel)]="row.typeDocument"
+                         [value]="'Devis'"
+                         [id]="'devis_' + j">
+                  <label class="form-check-label" [for]="'devis_' + j">Devis</label>
+                </div>
+              </div>
+
+              <div [class.col-md-5]="!needsTypeDocument(currentSection)"
+                   [class.col-md-4]="needsTypeDocument(currentSection)">
+                <label class="form-label mb-1">Date</label>
+                <input type="date"
+                       class="form-control form-control-sm"
+                       [(ngModel)]="row.date"
+                       [ngClass]="{ 'is-invalid': invalidIndexes.includes(j) }"
+                       (input)="clearInvalid(j)">
+              </div>
+
+              <div [class.col-md-5]="!needsTypeDocument(currentSection)"
+                   [class.col-md-3]="needsTypeDocument(currentSection)">
+                <label class="form-label mb-1">Montant</label>
+                <div class="input-group input-group-sm">
+                  <input type="number"
+                         class="form-control"
+                         [(ngModel)]="row.amount"
+                         [ngClass]="{ 'is-invalid': invalidIndexes.includes(j) }"
+                         (input)="clearInvalid(j)"
+                         placeholder="0" min="0" step="0.01">
+                  <span class="input-group-text">MAD</span>
+                </div>
+              </div>
+
+              <div class="col-md-1 d-flex align-items-end justify-content-center">
+                <label class="form-label invisible">Supprimer</label>
+                <button class="btn btn-outline-danger btn-sm"
+                        (click)="removeRow(j)"
+                        *ngIf="dateAmountRows.length > 1"
+                        title="Supprimer cette ligne">
+                  <i class="bi bi-dash"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="alert alert-danger p-2 d-flex align-items-center gap-2 mb-2"
+                 *ngIf="invalidIndexes.length > 0">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+              <div>Veuillez remplir correctement toutes les lignes (date ET montant requis).</div>
+            </div>
+
+            <div class="d-flex gap-2 align-items-center">
+              <button class="btn btn-light btn-sm rounded-circle p-2"
+                      title="Ajouter une ligne"
+                      (click)="addDateAmountRow()">
+                <i class="bi bi-plus-lg"></i>
+              </button>
+
+              <button *ngIf="shouldShowValidateButton()"
+                      class="btn btn-sm btn-primary"
+                      (click)="closePopup(false)">
+                Valider
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card mt-3 shadow-sm" *ngIf="isComplementMode">
+    <div class="card-header">
+      <h2 class="h5 mb-0">Chargement du complément d'information</h2>
+    </div>
+    <div class="card-body">
+      <div class="mb-3">
+        <label for="complementFile" class="form-label">Fichier complément (PDF)</label>
+        <input type="file" id="complementFile" class="form-control" (change)="onFileSelected($event)">
+      </div>
+    </div>
+  </div>
+
+  <div class="fixed-bottom bg-body">
+    <div class="container py-2 d-flex justify-content-end gap-2">
+      <button type="button" class="btn btn-secondary" (click)="router.navigate(['/employes-home'])">
+        Annuler
+      </button>
+
+      <button type="button" class="btn btn-primary" (click)="updateFiche()" [disabled]="loading">
+        <span *ngIf="!loading">Enregistrer</span>
+        <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </button>
+      <button *ngIf="isComplementMode" type="button" class="btn btn-primary" (click)="envoyerComplement()" [disabled]="loading || !complementFile">
+        <span *ngIf="!loading">Envoyer le complément</span>
+        <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #loadingTpl>
+  <div class="container py-5 text-center text-body-secondary">
+    <div class="spinner-border mb-3" role="status" aria-hidden="true"></div>
+    <div>Chargement…</div>
+  </div>
+</ng-template>
