@@ -44,7 +44,8 @@
                       class="form-control rounded-3"
                       rows="3"
                       placeholder="{{ 'MOTIF_PLACEHOLDER' | translate }}"
-                      [ngClass]="{'is-invalid': priseEnChargeForm.get('motif')?.invalid && priseEnChargeForm.get('motif')?.touched}">
+                      [ngClass]="{'is-invalid': priseEnChargeForm.get('motif')?.invalid && priseEnChargeForm.get('motif')?.touched}"
+                      [readonly]="isComplementOnlyEditable">
             </textarea>
             <div *ngIf="priseEnChargeForm.get('motif')?.invalid && priseEnChargeForm.get('motif')?.touched"
                  class="invalid-feedback small">
@@ -69,7 +70,8 @@
                      min="0"
                      class="form-control rounded-start-3"
                      placeholder="0"
-                     [ngClass]="{'is-invalid': priseEnChargeForm.get('montant')?.invalid && priseEnChargeForm.get('montant')?.touched}">
+                     [ngClass]="{'is-invalid': priseEnChargeForm.get('montant')?.invalid && priseEnChargeForm.get('montant')?.touched}"
+                     [readonly]="isComplementOnlyEditable">
               <span class="input-group-text bg-light rounded-end-3">MAD</span>
             </div>
             <div *ngIf="priseEnChargeForm.get('montant')?.invalid && priseEnChargeForm.get('montant')?.touched"
@@ -93,7 +95,8 @@
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="typeIntervention" id="typeOperation"
                        [checked]="typeIntervention === 'operation'"
-                       (change)="onTypeInterventionChange('operation')">
+                       (change)="onTypeInterventionChange('operation')"
+                       [disabled]="isComplementOnlyEditable">
                 <label class="form-check-label" for="typeOperation">
                   {{ 'OPERATION' | translate }}
                 </label>
@@ -101,7 +104,8 @@
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="typeIntervention" id="typeHospitalisation"
                        [checked]="typeIntervention === 'hospitalisation'"
-                       (change)="onTypeInterventionChange('hospitalisation')">
+                       (change)="onTypeInterventionChange('hospitalisation')"
+                       [disabled]="isComplementOnlyEditable">
                 <label class="form-check-label" for="typeHospitalisation">
                   {{ 'HOSPITALISATION' | translate }}
                 </label>
@@ -121,7 +125,8 @@
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="typeOperation" id="typePrevue"
                        [checked]="typeOperation === 'prevue'"
-                       (change)="onTypeOperationChange('prevue')">
+                       (change)="onTypeOperationChange('prevue')"
+                       [disabled]="isComplementOnlyEditable">
                 <label class="form-check-label" for="typePrevue">
                   {{ 'OPERATION_PREVUE' | translate }}
                 </label>
@@ -129,7 +134,8 @@
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="typeOperation" id="typeEffectuee"
                        [checked]="typeOperation === 'effectuee'"
-                       (change)="onTypeOperationChange('effectuee')">
+                       (change)="onTypeOperationChange('effectuee')"
+                       [disabled]="isComplementOnlyEditable">
                 <label class="form-check-label" for="typeEffectuee">
                   {{ 'OPERATION_EFFECTUEE' | translate }}
                 </label>
@@ -151,7 +157,8 @@
               <input type="date" id="dateOperation" class="form-control"
                      [(ngModel)]="dateOperation" [ngModelOptions]="{standalone: true}"
                      [max]="isEditMode ? '' : (today | date:'yyyy-MM-dd')"
-                     [ngClass]="{'is-invalid': !isDateOperationValid}">
+                     [ngClass]="{'is-invalid': !isDateOperationValid}"
+                     [readonly]="isComplementOnlyEditable">
               <button class="btn btn-outline-primary" type="button" (click)="verifierDateOperation()">
                 {{ 'VERIFIER' | translate }}
               </button>
@@ -182,12 +189,13 @@
                     <i class="bi bi-download"></i>
                   </button>
                   <button type="button" class="btn btn-sm btn-outline-danger"
-                          (click)="supprimerDossierExistant()">
+                          (click)="supprimerDossierExistant()"
+                          [disabled]="isComplementOnlyEditable">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>
               </div>
-              <div class="mt-2">
+              <div class="mt-2" *ngIf="!isComplementOnlyEditable">
                 <button type="button" class="btn btn-sm btn-outline-secondary"
                         (click)="dossierFileChanged = true">
                   <i class="bi bi-arrow-repeat me-1"></i> {{ 'REMPLACER_FICHIER' | translate }}
@@ -245,12 +253,13 @@
                     <i class="bi bi-download"></i>
                   </button>
                   <button type="button" class="btn btn-sm btn-outline-danger"
-                          (click)="supprimerPliConfidentielExistant()">
+                          (click)="supprimerPliConfidentielExistant()"
+                          [disabled]="isComplementOnlyEditable">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>
               </div>
-              <div class="mt-2">
+              <div class="mt-2" *ngIf="!isComplementOnlyEditable">
                 <button type="button" class="btn btn-sm btn-outline-secondary"
                         (click)="pliConfidentielFileChanged = true">
                   <i class="bi bi-arrow-repeat me-1"></i> {{ 'REMPLACER_FICHIER' | translate }}
@@ -286,6 +295,8 @@
               </button>
             </div>
           </div>
+
+
           <!-- 📋 Document complémentaire (analyses, etc.) -->
           <div class="col-md-6">
             <label for="documentComplementaireFile" class="form-label fw-semibold text-secondary">
@@ -307,12 +318,13 @@
                     <i class="bi bi-download"></i>
                   </button>
                   <button type="button" class="btn btn-sm btn-outline-danger"
-                          (click)="supprimerDocumentComplementaireExistant()">
+                          (click)="supprimerDocumentComplementaireExistant()"
+                          [disabled]="isComplementOnlyEditable">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>
               </div>
-              <div class="mt-2">
+              <div class="mt-2" *ngIf="!isComplementOnlyEditable">
                 <button type="button" class="btn btn-sm btn-outline-secondary"
                         (click)="documentComplementaireFileChanged = true">
                   <i class="bi bi-arrow-repeat me-1"></i> {{ 'REMPLACER_FICHIER' | translate }}
@@ -348,6 +360,69 @@
               </button>
             </div>
           </div>
+          <!-- 📋 Fichier de complément (demandé par le gestionnaire) -->
+          <div class="col-md-6" >
+            <label for="complementFile" class="form-label fw-semibold text-secondary">
+              {{ 'FICHIER_COMPLEMENT' | translate }} (PDF)
+            </label>
+
+            <!-- Fichier existant (en mode édition) -->
+            <div *ngIf="existingComplementFileCode && !complementFileChanged" class="mb-2">
+              <div class="d-flex align-items-center p-2 border rounded bg-light">
+                <i class="bi bi-file-earmark-pdf text-danger fs-4 me-2"></i>
+                <span class="flex-grow-1">{{ existingComplementFileName }}</span>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-primary"
+                          data-bs-toggle="modal" data-bs-target="#previewComplementModal">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-success"
+                          (click)="telechargerFichierExistant(existingComplementFileCode, existingComplementFileName || 'complement.pdf')">
+                    <i class="bi bi-download"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger"
+                          (click)="supprimerComplementExistant()">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="mt-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary"
+                        (click)="complementFileChanged = true">
+                  <i class="bi bi-arrow-repeat me-1"></i> {{ 'REMPLACER_FICHIER' | translate }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Sélection de fichier (nouveau ou remplacement) -->
+            <div *ngIf="!existingComplementFileCode || complementFileChanged">
+              <div class="input-group">
+                <input type="file"
+                       id="complementFile"
+                       class="form-control rounded-3"
+                       accept="application/pdf"
+                       (change)="onComplementFileSelected($event)">
+                <button *ngIf="complementFile"
+                        type="button"
+                        class="btn btn-outline-danger"
+                        (click)="complementFile = null; complementFileChanged = false;">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+              <small class="text-muted">{{ 'FORMAT_PDF_REQUIS' | translate }}</small>
+            </div>
+
+            <!-- Prévisualisation du nouveau fichier -->
+            <div *ngIf="complementFile" class="mt-2 d-flex align-items-center gap-2">
+              <i class="bi bi-file-earmark-pdf text-danger fs-4"></i>
+              <span>{{ complementFile.name }} ({{ (complementFile.size / 1024).toFixed(2) }} KB)</span>
+              <button type="button" class="btn btn-sm btn-outline-primary rounded-pill"
+                      data-bs-toggle="modal" data-bs-target="#previewComplementModal">
+                <i class="bi bi-eye me-1"></i> {{ 'PREVISUALISER' | translate }}
+              </button>
+            </div>
+          </div>
+
         </div>
 
         <!-- ✅ Boutons d'action -->
@@ -425,4 +500,20 @@
     </button>
   </div>
 </div>
+<!-- Modal pour prévisualiser le fichier de complément -->
+<div class="modal fade" id="previewComplementModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">{{ 'PREVISUALISATION_COMPLEMENT' | translate }}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <iframe *ngIf="previewComplement" [src]="previewComplement"
+                class="w-100 rounded" style="height: 70vh;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
 

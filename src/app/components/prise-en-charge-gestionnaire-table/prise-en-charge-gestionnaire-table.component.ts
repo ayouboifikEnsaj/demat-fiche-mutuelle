@@ -96,12 +96,12 @@ export class PriseEnChargeGestionnaireTableComponent implements OnInit {
 
   getStatutKey(statut: string): string {
     switch (statut) {
-      case 'En_attente': return 'FILTRE.STATUT.ENATTENTE';
+      case 'En_attente': return 'FILTRE.STATUT.ENATTENTE.PRISE';
       case 'validée_par_rh': return 'FILTRE.STATUT.VALIDEE';
       case 'Rejete': return 'FILTRE.STATUT.REJETEE';
       case "Retour_complement_d'informations": return 'FILTRE.STATUT.RETOURCOMPLEMENT';
-      case "en_cour_de_traitement_par_assurance": return 'FILTRE.STATUT.ENCOURSTRAITEMENT';
-      case "accorder": return 'FILTRE.STATUT.ACCORDER';
+      case "en_cour_de_traitement_par_assurance": return 'FILTRE.STATUT.ENCOURSTRAITEMENT.PRISE';
+      case "accorder": return 'FILTRE.STATUT.ACCORDER.PRISE';
       default: return statut;
     }
   }

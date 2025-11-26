@@ -132,14 +132,29 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
       </div>
       <div class="modal-body">
+        <!-- Commentaire du gestionnaire avec style amélioré -->
+        <div *ngIf="selectedPriseEnCharge?.commentaireRetour" class="mb-4">
+          <div class="p-3 border border-warning bg-warning bg-opacity-10 rounded-3">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-exclamation-triangle-fill text-warning fs-4 me-3 mt-1"></i>
+              <div>
+                <h6 class="fw-semibold text-dark mb-2">{{ 'COMMENTAIRE_RETOUR' | translate }}</h6>
+                <p class="mb-0 text-secondary">{{ selectedPriseEnCharge?.commentaireRetour }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulaire pour téléverser le fichier -->
         <form>
           <div class="mb-3">
-            <label for="complementFile" class="form-label">{{ 'FICHIER_COMPLEMENT' | translate }} (PDF)</label>
-            <input type="file" id="complementFile" class="form-control" (change)="onFileSelected($event)" accept="application/pdf">
+            <label for="complementFile" class="form-label fw-semibold">{{ 'FICHIER_COMPLEMENT' | translate }} (PDF)</label>
+            <input type="file" id="complementFile" class="form-control rounded-3" (change)="onFileSelected($event)" accept="application/pdf">
             <small class="text-muted">{{ 'FORMAT_PDF_REQUIS' | translate }}</small>
           </div>
         </form>
       </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'ANNULER' | translate }}</button>
         <button type="button" class="btn btn-primary" (click)="envoyerComplement()">{{ 'ENVOYER' | translate }}</button>

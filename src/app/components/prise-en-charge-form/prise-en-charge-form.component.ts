@@ -51,6 +51,14 @@ export class PriseEnChargeFormComponent implements OnInit {
   existingDocumentComplementaireFileName: string | null = null;
   documentComplementaireFileChanged = false;
 
+  isComplementOnlyEditable: boolean = false;
+
+  existingComplementFileCode: string | null = null;
+  existingComplementFileName: string | null = null;
+  complementFile: File | null = null;
+  previewComplement: SafeResourceUrl | null = null;
+  complementFileChanged = false;
+
   constructor(
     private fb: FormBuilder,
     private priseEnChargeService: PriseEnChargeService,
@@ -208,12 +216,26 @@ export class PriseEnChargeFormComponent implements OnInit {
       this.priseEnChargeService.getPriseEnChargeById(this.priseEnChargeId).subscribe({
         next: (priseEnCharge) => {
           console.log('Prise en charge chargée:', priseEnCharge);
+          // Déterminer si seul le document complémentaire est modifiable
+          this.isComplementOnlyEditable = !!(
+            // Cas 1: Statut actuel est "Retour pour complément d'informations"
+            priseEnCharge.statutPriseEnCharge === "Retour_complement_d'informations" ||
+            // Cas 2: A déjà eu un retour pour complément (vérifié par l'existence d'un document complémentaire)
+            (priseEnCharge.complement && priseEnCharge.complement.file)
+          );
 
           // Remplir le formulaire avec les données existantes
           this.priseEnChargeForm.patchValue({
             motif: priseEnCharge.motif,
             montant: priseEnCharge.montant
           });
+          if (this.isComplementOnlyEditable) {
+            this.priseEnChargeForm.get('motif')?.disable();
+            this.priseEnChargeForm.get('montant')?.disable();
+            this.priseEnChargeForm.get('typeIntervention')?.disable();
+            this.priseEnChargeForm.get('typeOperation')?.disable();
+            // Ne pas désactiver les contrôles pour le document complémentaire
+          }
 
           // Charger les données de type d'intervention
           if (priseEnCharge.typeIntervention) {
@@ -276,15 +298,14 @@ export class PriseEnChargeFormComponent implements OnInit {
           }
 
           // Si le statut est "Retour pour complément d'informations", vérifier s'il y a un fichier de complément existant
-          if (priseEnCharge.statutPriseEnCharge === "Retour_complement_d'informations" &&
-            priseEnCharge.complement && priseEnCharge.complement.file) {
-            // Utiliser le fichier de complément comme document complémentaire
-            this.existingDocumentComplementaireFileCode = priseEnCharge.complement.file;
-            this.existingDocumentComplementaireFileName = priseEnCharge.complement.name || 'complement.pdf';
+          if (priseEnCharge.complement && priseEnCharge.complement.file) {
+            console.log('Fichier de complément trouvé:', priseEnCharge.complement);
+            this.existingComplementFileCode = priseEnCharge.complement.file;
+            this.existingComplementFileName = priseEnCharge.complement.name || 'complement.pdf';
 
             // Créer l'URL pour la prévisualisation
             const complementUrl = `http://localhost:8080/api/attachment/view/${priseEnCharge.complement.file}`;
-            this.previewDocumentComplementaire = this.sanitizer.bypassSecurityTrustResourceUrl(complementUrl);
+            this.previewComplement = this.sanitizer.bypassSecurityTrustResourceUrl(complementUrl);
           }
         },
         error: (err) => {
@@ -468,13 +489,24 @@ export class PriseEnChargeFormComponent implements OnInit {
     }
 
     const priseEnCharge: any = {
-      motif: this.priseEnChargeForm.value.motif,
-      montant: this.priseEnChargeForm.value.montant,
-      statutPriseEnCharge: 'En_attente',
-      typeIntervention: this.typeIntervention,
-      typeOperation: this.typeOperation,
-      dateOperation: this.dateOperation ? new Date(this.dateOperation).toISOString() : null
+      // motif: this.priseEnChargeForm.value.motif,
+      // montant: this.priseEnChargeForm.value.montant,
+      // statutPriseEnCharge: 'En_attente',
+      // typeIntervention: this.typeIntervention,
+      // typeOperation: this.typeOperation,
+      // dateOperation: this.dateOperation ? new Date(this.dateOperation).toISOString() : null
     };
+    if (!this.isComplementOnlyEditable) {
+      // Inclure tous les champs pour une modification normale
+      priseEnCharge.motif = this.priseEnChargeForm.value.motif;
+      priseEnCharge.montant = this.priseEnChargeForm.value.montant;
+      priseEnCharge.typeIntervention = this.typeIntervention;
+      priseEnCharge.typeOperation = this.typeOperation;
+      priseEnCharge.dateOperation = this.dateOperation ? new Date(this.dateOperation).toISOString() : null;
+    } else {
+      // Pour les modifications de complément uniquement, conserver le statut actuel
+      // et ne pas inclure les autres champs pour éviter de les modifier
+    }
 
     if (this.isEditMode && this.priseEnChargeId) {
       // --- Mode édition ---
@@ -482,9 +514,10 @@ export class PriseEnChargeFormComponent implements OnInit {
         this.priseEnChargeId,
         priseEnCharge,
         user.id,
-        this.dossierFileChanged && this.dossierFile ? this.dossierFile : undefined,
-        this.pliConfidentielFileChanged && this.pliConfidentielFile ? this.pliConfidentielFile : undefined,
-        this.documentComplementaireFileChanged && this.documentComplementaireFile ? this.documentComplementaireFile : undefined
+        !this.isComplementOnlyEditable && this.dossierFileChanged && this.dossierFile ? this.dossierFile : undefined,
+        !this.isComplementOnlyEditable && this.pliConfidentielFileChanged && this.pliConfidentielFile ? this.pliConfidentielFile : undefined,
+        !this.isComplementOnlyEditable && this.documentComplementaireFileChanged && this.documentComplementaireFile ? this.documentComplementaireFile : undefined,
+        this.complementFileChanged && this.complementFile ? this.complementFile : undefined
       ).subscribe({
         next: () => {
           this.isSubmitting = false;
@@ -596,4 +629,37 @@ export class PriseEnChargeFormComponent implements OnInit {
     a.click();
     document.body.removeChild(a);
   }
+  // Méthode pour gérer la sélection du fichier de complément
+  onComplementFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.type !== 'application/pdf') {
+        this.translateService.get('FORMAT_PDF_REQUIS').subscribe(msg => {
+          alert(msg);
+        });
+        event.target.value = '';
+        return;
+      }
+      this.complementFile = file;
+      this.complementFileChanged = true;
+      this.createPreviewForComplement(file);
+    }
+  }
+
+// Méthode pour créer une prévisualisation du fichier de complément
+  createPreviewForComplement(file: File): void {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewComplement = this.sanitizer.bypassSecurityTrustResourceUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  }
+
+// Méthode pour supprimer le fichier de complément existant
+  supprimerComplementExistant(): void {
+    this.existingComplementFileCode = null;
+    this.existingComplementFileName = null;
+    this.previewComplement = null;
+  }
+
 }

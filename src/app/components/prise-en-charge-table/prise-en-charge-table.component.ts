@@ -69,6 +69,12 @@ export class PriseEnChargeTableComponent implements OnInit {
     }
   }
 
+  setSelectedPriseEnCharge(priseEnCharge: PriseEnCharge): void {
+    this.selectedPriseEnCharge = priseEnCharge;  // Stocker l'objet complet
+    this.selectedPriseEnChargeId = priseEnCharge.id || null;  // Conserver cette ligne pour compatibilité
+    this.complementFile = null;
+  }
+
   filterPriseEnCharges(): void {
     const expectedStatut = this.statutMap[this.statut];
 
@@ -108,11 +114,6 @@ export class PriseEnChargeTableComponent implements OnInit {
       case "accorder": return 'FILTRE.STATUT.ACCORDER.PRISE';
       default: return statut;
     }
-  }
-
-  setSelectedPriseEnCharge(priseEnCharge: PriseEnCharge): void {
-    this.selectedPriseEnChargeId = priseEnCharge.id || null;
-    this.complementFile = null;
   }
 
   onFileSelected(event: any): void {
@@ -241,4 +242,5 @@ export class PriseEnChargeTableComponent implements OnInit {
       }
     });
   }
+
 }

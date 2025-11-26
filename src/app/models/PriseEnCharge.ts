@@ -33,4 +33,5 @@ export interface PriseEnCharge {
   typeOperation?: string;
   dateOperation?: string;
   documentComplementaire?: any;
+  commentaireRetour?: string;
 }

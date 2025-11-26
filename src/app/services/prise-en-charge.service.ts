@@ -33,7 +33,8 @@ export class PriseEnChargeService {
     employeeId: number,
     dossierFile?: File,
     pliConfidentielFile?: File,
-    documentComplementaireFile?: File
+    documentComplementaireFile?: File,
+    complementFile?: File
   ): Observable<PriseEnCharge> {
     const formData = new FormData();
     formData.append('priseEnCharge', JSON.stringify(priseEnCharge));
@@ -47,6 +48,9 @@ export class PriseEnChargeService {
     }
     if (documentComplementaireFile) {
       formData.append('documentComplementaireFile', documentComplementaireFile);
+    }
+    if (complementFile) {
+      formData.append('complementFile', complementFile);
     }
 
     return this.http.put<PriseEnCharge>(`${this.apiUrl}/update1/${id}`, formData);

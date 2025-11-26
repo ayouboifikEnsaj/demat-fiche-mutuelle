@@ -249,6 +249,9 @@
   "DATE_OPERATION_VALIDE": "La date est valide. Vous pouvez soumettre votre demande.",
   "FILTRE.STATUT.ENATTENTE.PRISE": "Transmis RH",
   "FILTRE.STATUT.ENCOURSTRAITEMENT.PRISE": "Transmis assurance",
-  "FILTRE.STATUT.ACCORDER.PRISE": "Accordé assurance"
+  "FILTRE.STATUT.ACCORDER.PRISE": "Accordé assurance",
+  "COMMENTAIRE_RETOUR": "Commentaire :"
+
+
 
 }
